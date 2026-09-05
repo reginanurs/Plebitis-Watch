@@ -1,0 +1,184 @@
+[
+  {
+    "id": "mengenal-pivc",
+    "title": "Mengenal PIVC",
+    "category": "PIVC",
+    "summary": "Penjelasan singkat mengenai Peripheral Intravenous Catheter (PIVC), fungsinya, dan hal-hal yang perlu diperhatikan selama pemantauan.",
+    "sections": [
+      {
+        "heading": "Apa itu PIVC?",
+        "paragraphs": [
+          "PIVC (Peripheral Intravenous Catheter) adalah kateter intravena yang dipasang pada pembuluh darah vena perifer, umumnya digunakan untuk memberikan cairan, obat, atau nutrisi kepada pasien."
+        ]
+      },
+      {
+        "heading": "Fungsi Umum",
+        "paragraphs": [
+          "PIVC banyak digunakan pada pasien rawat inap untuk mendukung terapi cairan dan pemberian obat intravena sesuai indikasi dan arahan tenaga kesehatan yang merawat."
+        ]
+      },
+      {
+        "heading": "Hal yang Perlu Diperhatikan dalam Monitoring",
+        "bullets": [
+          "Lokasi dan sisi pemasangan",
+          "Tanggal dan waktu pemasangan",
+          "Jenis dan ukuran kateter yang digunakan",
+          "Kondisi area insersi secara berkala"
+        ]
+      }
+    ],
+    "lastUpdated": "2026-09-05"
+  },
+  {
+    "id": "mengenal-phlebitis",
+    "title": "Mengenal Phlebitis",
+    "category": "Phlebitis",
+    "summary": "Pengertian umum phlebitis, tanda dan gejala yang perlu diperhatikan, serta pentingnya pemantauan area insersi.",
+    "sections": [
+      {
+        "heading": "Pengertian Umum",
+        "paragraphs": [
+          "Phlebitis secara umum merujuk pada peradangan pada dinding pembuluh darah vena. Penjelasan ini bersifat edukatif dan bukan merupakan pedoman diagnosis."
+        ]
+      },
+      {
+        "heading": "Tanda dan Gejala yang Perlu Diperhatikan",
+        "bullets": [
+          "Nyeri pada area insersi",
+          "Kemerahan (eritema)",
+          "Penebalan atau area yang teraba keras (indurasi)",
+          "Vena yang teraba seperti tali (palpable venous cord)",
+          "Tanda lain seperti demam atau adanya nanah"
+        ]
+      },
+      {
+        "heading": "Pentingnya Pemantauan",
+        "paragraphs": [
+          "Pemantauan area insersi secara berkala membantu mendokumentasikan kondisi pasien dari waktu ke waktu. Interpretasi klinis dan tindak lanjut tetap mengikuti penilaian tenaga kesehatan serta SOP fasilitas yang berlaku."
+        ]
+      }
+    ],
+    "lastUpdated": "2026-09-05"
+  },
+  {
+    "id": "observasi-area-insersi",
+    "title": "Observasi Area Insersi",
+    "category": "Monitoring",
+    "summary": "Panduan umum mengenai hal-hal yang diamati saat melakukan penilaian VIP Score pada area insersi PIVC.",
+    "sections": [
+      {
+        "heading": "Komponen yang Diamati",
+        "paragraphs": [
+          "Penilaian VIP Score pada aplikasi ini mengacu pada beberapa komponen observasi berikut, sesuai formulir penilaian yang tersedia."
+        ],
+        "bullets": [
+          "Nyeri (tidak ada, nyeri ringan di sekitar area insersi, atau nyeri di sepanjang jalur kanula)",
+          "Eritema (kemerahan) pada area insersi",
+          "Pembengkakan pada area insersi",
+          "Palpable venous cord (vena teraba seperti tali)",
+          "Demam (pyrexia)"
+        ]
+      },
+      {
+        "heading": "Cara Melakukan Observasi",
+        "paragraphs": [
+          "Amati area insersi secara visual dan lakukan palpasi sesuai kebutuhan, lalu pilih kondisi yang paling sesuai untuk setiap komponen pada formulir penilaian.",
+          "Hasil observasi dicatat apa adanya. Interpretasi skor dan kategori mengikuti konfigurasi klinis yang berlaku pada aplikasi serta kebijakan fasilitas."
+        ]
+      }
+    ],
+    "lastUpdated": "2026-09-06"
+  },
+  {
+    "id": "dokumentasi-foto",
+    "title": "Dokumentasi Foto",
+    "category": "Monitoring",
+    "summary": "Tujuan dokumentasi foto area insersi sebagai bukti visual pendukung, bukan sebagai alat diagnosis otomatis.",
+    "sections": [
+      {
+        "heading": "Tujuan Dokumentasi",
+        "paragraphs": [
+          "Dokumentasi foto area insersi berfungsi sebagai bukti visual pendukung yang melengkapi catatan observasi tertulis, sehingga perkembangan kondisi area insersi dapat ditinjau kembali dari waktu ke waktu."
+        ]
+      },
+      {
+        "heading": "Konsistensi Dokumentasi",
+        "bullets": [
+          "Ambil foto pada area yang sama setiap kali dokumentasi",
+          "Catat tanggal dan waktu pengambilan foto",
+          "Sertakan catatan singkat mengenai kondisi yang terlihat"
+        ]
+      },
+      {
+        "heading": "Batasan Penting",
+        "paragraphs": [
+          "Foto berfungsi sebagai dokumentasi visual, bukan sebagai alat diagnosis otomatis. Aplikasi ini tidak melakukan analisis gambar maupun interpretasi klinis dari foto yang diunggah."
+        ]
+      }
+    ],
+    "lastUpdated": "2026-09-05"
+  },
+  {
+    "id": "monitoring-riwayat",
+    "title": "Monitoring dan Riwayat",
+    "category": "Monitoring",
+    "summary": "Pentingnya pencatatan serial, hubungan antara assessment dan riwayat, serta penggunaan grafik untuk melihat perkembangan data.",
+    "sections": [
+      {
+        "heading": "Mengapa Pencatatan Serial Penting",
+        "paragraphs": [
+          "Setiap hasil penilaian VIP Score tersimpan sebagai satu catatan monitoring. Rangkaian pencatatan dari waktu ke waktu membantu melihat perkembangan kondisi area insersi secara longitudinal."
+        ]
+      },
+      {
+        "heading": "Riwayat Monitoring",
+        "paragraphs": [
+          "Halaman Riwayat menampilkan seluruh assessment yang tersimpan, lengkap dengan informasi pasien, PIVC terkait, hasil observasi, serta status foto dan catatan yang menyertainya."
+        ]
+      },
+      {
+        "heading": "Grafik Perkembangan",
+        "paragraphs": [
+          "Halaman Grafik memvisualisasikan hasil VIP Score dari beberapa assessment untuk membantu melihat tren data. Grafik hanya menampilkan nilai yang benar-benar tersimpan dan tidak akan menampilkan angka jika hasil penilaian belum tersedia."
+        ]
+      }
+    ],
+    "lastUpdated": "2026-09-05"
+  },
+  {
+    "id": "menggunakan-plebitis-watch",
+    "title": "Menggunakan PLEBITIS WATCH",
+    "category": "Penggunaan Aplikasi",
+    "summary": "Alur penggunaan aplikasi PLEBITIS WATCH, mulai dari data pasien hingga pemantauan lanjutan.",
+    "sections": [
+      {
+        "heading": "Alur Penggunaan Aplikasi",
+        "paragraphs": [
+          "Aplikasi ini dirancang untuk mendukung alur pemantauan PIVC secara berurutan, mulai dari pencatatan data pasien hingga pemantauan lanjutan berikut."
+        ],
+        "bullets": [
+          "Data Pasien — mencatat data dasar pasien",
+          "Data PIVC — mencatat pemasangan kateter intravena perifer",
+          "Penilaian VIP Score — melakukan observasi area insersi",
+          "Dokumentasi Foto — menyimpan bukti visual pendukung",
+          "Hasil Penilaian — meninjau ringkasan hasil observasi",
+          "Rekomendasi — meninjau dukungan keputusan klinis yang tersedia",
+          "Reminder — mengatur jadwal pemantauan berikutnya",
+          "Riwayat & Grafik — meninjau perkembangan data secara longitudinal"
+        ]
+      },
+      {
+        "heading": "Dukungan Keputusan, Bukan Pengganti Keputusan Klinis",
+        "paragraphs": [
+          "Seluruh hasil dan rekomendasi dalam aplikasi ini bersifat sebagai pendukung keputusan klinis. Penggunaan klinis tetap mengikuti SOP, kebijakan, dan prosedur fasilitas pelayanan kesehatan yang berlaku."
+        ]
+      }
+    ],
+    "relatedLinks": [
+      { "label": "Lakukan Penilaian", "path": "/penilaian" },
+      { "label": "Lihat Riwayat", "path": "/riwayat" },
+      { "label": "Lihat Grafik", "path": "/grafik" }
+    ],
+    "lastUpdated": "2026-09-05"
+  }
+]

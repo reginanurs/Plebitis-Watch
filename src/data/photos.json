@@ -1,0 +1,55 @@
+[
+  {
+    "id": "photo-seed-1",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "imageData": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'320'%20height%3D'240'%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'%23cbb69a'%2F%3E%3Ccircle%20cx%3D'160'%20cy%3D'100'%20r%3D'36'%20fill%3D'%23ffffff'%20fill-opacity%3D'0.35'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'58%25'%20font-family%3D'sans-serif'%20font-size%3D'18'%20text-anchor%3D'middle'%20fill%3D'%233f3f3f'%3EDEMO%20-%20Dokumentasi%20Awal%3C%2Ftext%3E%3C%2Fsvg%3E",
+    "date": "2026-09-02",
+    "time": "14:30",
+    "insertionSite": "Vena dorsalis manus",
+    "vipScore": null,
+    "vipCategory": null,
+    "note": "Dokumentasi awal setelah pemasangan. Area insersi bersih, tidak ada tanda kemerahan.",
+    "createdBy": "Perawat"
+  },
+  {
+    "id": "photo-seed-2",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "assessmentId": "assessment-seed-2",
+    "imageData": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'320'%20height%3D'240'%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'%23c9a98a'%2F%3E%3Ccircle%20cx%3D'160'%20cy%3D'100'%20r%3D'36'%20fill%3D'%23ffffff'%20fill-opacity%3D'0.35'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'58%25'%20font-family%3D'sans-serif'%20font-size%3D'18'%20text-anchor%3D'middle'%20fill%3D'%233f3f3f'%3EDEMO%20-%20Monitoring%20H%2B1%3C%2Ftext%3E%3C%2Fsvg%3E",
+    "date": "2026-09-03",
+    "time": "09:15",
+    "insertionSite": "Vena dorsalis manus",
+    "vipScore": 1,
+    "vipCategory": "Kemungkinan tanda awal phlebitis",
+    "note": "Pemantauan hari ke-1. Terlihat sedikit kemerahan, sesuai penilaian VIP Score pada tanggal yang sama.",
+    "createdBy": "Perawat"
+  },
+  {
+    "id": "photo-seed-3",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "imageData": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'320'%20height%3D'240'%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'%23d8b3a0'%2F%3E%3Ccircle%20cx%3D'160'%20cy%3D'100'%20r%3D'36'%20fill%3D'%23ffffff'%20fill-opacity%3D'0.35'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'58%25'%20font-family%3D'sans-serif'%20font-size%3D'18'%20text-anchor%3D'middle'%20fill%3D'%233f3f3f'%3EDEMO%20-%20Monitoring%20H%2B2%3C%2Ftext%3E%3C%2Fsvg%3E",
+    "date": "2026-09-04",
+    "time": "10:05",
+    "insertionSite": "Vena dorsalis manus",
+    "vipScore": null,
+    "vipCategory": null,
+    "note": "Pemantauan hari ke-2. Kondisi area insersi masih dalam pengawasan rutin.",
+    "createdBy": "Perawat"
+  },
+  {
+    "id": "photo-seed-4",
+    "patientId": "seed-8",
+    "pivcId": "pivc-seed-3",
+    "imageData": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'320'%20height%3D'240'%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'%23b9c8b8'%2F%3E%3Ccircle%20cx%3D'160'%20cy%3D'100'%20r%3D'36'%20fill%3D'%23ffffff'%20fill-opacity%3D'0.35'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'58%25'%20font-family%3D'sans-serif'%20font-size%3D'18'%20text-anchor%3D'middle'%20fill%3D'%233f3f3f'%3EDEMO%20-%20Pasien%20Lain%3C%2Ftext%3E%3C%2Fsvg%3E",
+    "date": "2026-09-04",
+    "time": "08:50",
+    "insertionSite": "Vena mediana cubiti",
+    "vipScore": null,
+    "vipCategory": null,
+    "note": "Dokumentasi area insersi pasien lansia, dipantau lebih ketat sesuai catatan PIVC.",
+    "createdBy": "Perawat"
+  }
+]

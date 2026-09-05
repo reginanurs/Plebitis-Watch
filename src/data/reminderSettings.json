@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "defaultIntervalMinutes": 240,
+  "intervalUnit": "hours",
+  "source": "Prototype demonstration only",
+  "clinicalStatus": "demo"
+}

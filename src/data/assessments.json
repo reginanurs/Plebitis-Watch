@@ -1,0 +1,92 @@
+[
+  {
+    "id": "assessment-seed-1",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "date": "2026-09-02",
+    "time": "15:00",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "none",
+      "erythema": "absent",
+      "swelling": "absent",
+      "venousCord": "absent",
+      "pyrexia": "absent"
+    },
+    "totalScore": 0,
+    "category": "Tidak ada tanda phlebitis",
+    "notes": "Kondisi awal area insersi baik, tidak ada tanda kemerahan atau nyeri."
+  },
+  {
+    "id": "assessment-seed-2",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "date": "2026-09-03",
+    "time": "09:30",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "none",
+      "erythema": "present",
+      "swelling": "absent",
+      "venousCord": "absent",
+      "pyrexia": "absent"
+    },
+    "totalScore": 1,
+    "category": "Kemungkinan tanda awal phlebitis",
+    "notes": "Sedikit kemerahan pada area insersi, dipantau lebih sering."
+  },
+  {
+    "id": "assessment-seed-3",
+    "patientId": "seed-1",
+    "pivcId": "pivc-seed-1",
+    "date": "2026-09-04",
+    "time": "10:15",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "slight_near_site",
+      "erythema": "present",
+      "swelling": "absent",
+      "venousCord": "absent",
+      "pyrexia": "absent"
+    },
+    "totalScore": 2,
+    "category": "Stadium awal phlebitis",
+    "notes": "Nyeri ringan dan kemerahan tampak pada area insersi, dipantau lebih ketat."
+  },
+  {
+    "id": "assessment-seed-4",
+    "patientId": "seed-8",
+    "pivcId": "pivc-seed-3",
+    "date": "2026-09-04",
+    "time": "09:00",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "along_cannula",
+      "erythema": "present",
+      "swelling": "present",
+      "venousCord": "absent",
+      "pyrexia": "absent"
+    },
+    "totalScore": 3,
+    "category": "Stadium sedang phlebitis",
+    "notes": "Nyeri di sepanjang jalur kanula disertai kemerahan dan bengkak pada area insersi; pasien lansia dipantau lebih ketat sesuai SOP."
+  },
+  {
+    "id": "assessment-seed-5",
+    "patientId": "seed-4",
+    "pivcId": "pivc-seed-2",
+    "date": "2026-08-21",
+    "time": "10:00",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "along_cannula",
+      "erythema": "present",
+      "swelling": "present",
+      "venousCord": "present",
+      "pyrexia": "absent"
+    },
+    "totalScore": 4,
+    "category": "Stadium lanjut phlebitis / awal thrombophlebitis",
+    "notes": "Ditemukan tanda phlebitis lanjut: nyeri di sepanjang kanula, kemerahan, bengkak, dan vena teraba seperti tali. PIVC dijadwalkan untuk dilepas dan diganti sesuai SOP."
+  }
+]

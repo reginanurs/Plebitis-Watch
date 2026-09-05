@@ -1,0 +1,5 @@
+{
+  "clinicalStatus": "pending",
+  "rules": [],
+  "note": "PENDING: recommendation rules require confirmation against the applicable SOP/protocol before they can be configured here. The supplied UI reference shows example action items (\"Lakukan Pemantauan Kembali\", \"Observasi Tanda dan Gejala\", \"Perawatan Area Insersi\", \"Dokumentasi\") for a category-2 (Ringan) result — these are mockup illustrations only and must NOT be treated as a confirmed clinical recommendation matrix. Do not add rule entries by inferring them from that mockup; only add a rule here once the facility's SOP/protocol has been supplied and explicitly mapped to a VIP Score category, and set clinicalStatus to \"confirmed\" once at least one real rule exists."
+}

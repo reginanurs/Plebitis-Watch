@@ -1,0 +1,71 @@
+{
+  "clinicalStatus": "confirmed",
+  "source": "Visual Infusion Phlebitis Scale (Jackson)",
+  "scale": "VIP Score 0-5",
+  "maxScore": 5,
+  "note": "Skor dihitung berdasarkan kombinasi tanda yang terpenuhi (hierarchical/criteria-based), bukan penjumlahan poin per komponen. Lihat src/utils/vipScore.ts untuk logika evaluasi aturan di bawah.",
+  "components": [
+    {
+      "id": "pain",
+      "label": "Nyeri",
+      "order": 1,
+      "options": [
+        { "id": "none", "label": "Tidak ada nyeri", "meetsSign": false },
+        { "id": "slight_near_site", "label": "Nyeri ringan di sekitar area insersi", "meetsSign": true, "meetsSevereSign": false },
+        { "id": "along_cannula", "label": "Nyeri di sepanjang jalur kanula", "meetsSign": true, "meetsSevereSign": true }
+      ]
+    },
+    {
+      "id": "erythema",
+      "label": "Eritema (Kemerahan)",
+      "order": 2,
+      "options": [
+        { "id": "absent", "label": "Tidak ada kemerahan", "meetsSign": false },
+        { "id": "present", "label": "Kemerahan pada area insersi", "meetsSign": true }
+      ]
+    },
+    {
+      "id": "swelling",
+      "label": "Pembengkakan",
+      "order": 3,
+      "options": [
+        { "id": "absent", "label": "Tidak ada pembengkakan", "meetsSign": false },
+        { "id": "present", "label": "Pembengkakan pada area insersi", "meetsSign": true }
+      ]
+    },
+    {
+      "id": "venousCord",
+      "label": "Palpable Venous Cord (Vena Teraba Seperti Tali)",
+      "order": 4,
+      "options": [
+        { "id": "absent", "label": "Tidak teraba", "meetsSign": false },
+        { "id": "present", "label": "Vena teraba seperti tali", "meetsSign": true }
+      ]
+    },
+    {
+      "id": "pyrexia",
+      "label": "Demam (Pyrexia)",
+      "order": 5,
+      "options": [
+        { "id": "absent", "label": "Tidak demam", "meetsSign": false },
+        { "id": "present", "label": "Demam", "meetsSign": true }
+      ]
+    }
+  ],
+  "rules": [
+    { "score": 5, "requires": { "severePain": true, "erythema": true, "swelling": true, "venousCord": true, "pyrexia": true } },
+    { "score": 4, "requires": { "severePain": true, "erythema": true, "swelling": true, "venousCord": true } },
+    { "score": 3, "requires": { "severePain": true, "erythema": true, "swelling": true } },
+    { "score": 2, "countAtLeast": { "count": 2, "from": ["pain", "erythema", "swelling"] } },
+    { "score": 1, "anyOf": ["pain", "erythema"] },
+    { "score": 0 }
+  ],
+  "categories": [
+    { "score": 0, "label": "Tidak ada tanda phlebitis", "color": "bg-emerald-50 text-emerald-700" },
+    { "score": 1, "label": "Kemungkinan tanda awal phlebitis", "color": "bg-yellow-50 text-yellow-700" },
+    { "score": 2, "label": "Stadium awal phlebitis", "color": "bg-amber-50 text-amber-700" },
+    { "score": 3, "label": "Stadium sedang phlebitis", "color": "bg-orange-50 text-orange-700" },
+    { "score": 4, "label": "Stadium lanjut phlebitis / awal thrombophlebitis", "color": "bg-red-50 text-red-700" },
+    { "score": 5, "label": "Stadium lanjut thrombophlebitis", "color": "bg-red-100 text-red-800" }
+  ]
+}
