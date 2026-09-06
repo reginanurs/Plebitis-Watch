@@ -7,7 +7,7 @@
  * point values per field. See `src/utils/vipScore.ts` for how `rules`
  * below is evaluated.
  */
-export type VipSignId = 'pain' | 'erythema' | 'swelling' | 'venousCord' | 'pyrexia'
+export type VipSignId = 'pain' | 'erythema' | 'swelling' | 'induration' | 'venousCord' | 'pyrexia'
 
 export interface VipOption {
   id: string
@@ -23,6 +23,8 @@ export interface VipComponent {
   label: string
   order: number
   options: VipOption[]
+  /** Optional short clarifying line shown under the label (e.g. plain-language meaning of a clinical term). */
+  helperText?: string
 }
 
 /**

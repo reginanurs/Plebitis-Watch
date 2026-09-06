@@ -8,6 +8,7 @@ export interface AssessmentComponents {
   pain: string
   erythema: string
   swelling: string
+  induration: string
   venousCord: string
   pyrexia: string
 }

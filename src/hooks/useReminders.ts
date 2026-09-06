@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import remindersSeed from '../data/reminders.json'
 import type { Reminder, ReminderInput } from '../types/reminder'
+import type { ReminderTriggerType } from '../types/reminderSettings'
 import { calculateNextMonitoringAt, getReminderStatus } from '../utils/reminder'
 import { useLocalStorageState } from './useLocalStorageState'
 
@@ -13,6 +14,7 @@ interface ScheduleNextParams {
   fromAt: string
   intervalMinutes: number
   source: string | null
+  triggerType?: ReminderTriggerType
 }
 
 export function useReminders() {
@@ -75,7 +77,7 @@ export function useReminders() {
    * leaving the previous one incorrectly stuck as overdue.
    */
   const scheduleNextForPivc = useCallback(
-    ({ patientId, pivcId, basedOnAssessmentId, fromAt, intervalMinutes, source }: ScheduleNextParams) => {
+    ({ patientId, pivcId, basedOnAssessmentId, fromAt, intervalMinutes, source, triggerType }: ScheduleNextParams) => {
       const nextMonitoringAt = calculateNextMonitoringAt(fromAt, intervalMinutes)
       const now = new Date().toISOString()
 
@@ -89,6 +91,7 @@ export function useReminders() {
             intervalMinutes,
             basedOnAssessmentId,
             source,
+            triggerType,
             enabled: true,
             updatedAt: now,
           }
@@ -104,6 +107,7 @@ export function useReminders() {
           intervalMinutes,
           enabled: true,
           source,
+          triggerType,
           createdAt: now,
           updatedAt: now,
         }

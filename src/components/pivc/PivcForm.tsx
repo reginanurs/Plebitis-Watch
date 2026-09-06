@@ -18,6 +18,9 @@ interface PivcFormProps {
   onCancel: () => void
 }
 
+/** Sentinel select value that reveals the free-text "custom therapy" input. */
+const THERAPY_OTHER_VALUE = '__other__'
+
 interface FormState {
   installationDate: string
   installationTime: string
@@ -25,6 +28,8 @@ interface FormState {
   extremitySide: string
   catheterType: string
   therapy: string
+  therapyOther: string
+  insertedBy: string
   purpose: string
   additionalNotes: string
   insertionDifficulty: boolean
@@ -40,19 +45,24 @@ function toFormState(pivc?: Pivc): FormState {
       extremitySide: '',
       catheterType: '',
       therapy: '',
+      therapyOther: '',
+      insertedBy: 'Perawat',
       purpose: '',
       additionalNotes: '',
       insertionDifficulty: false,
       insertedByAnotherNurse: false,
     }
   }
+  const isCustomTherapy = Boolean(pivc.therapy) && !THERAPY_OPTIONS.includes(pivc.therapy)
   return {
     installationDate: pivc.installationDate,
     installationTime: pivc.installationTime,
     insertionSite: pivc.insertionSite,
     extremitySide: pivc.extremitySide,
     catheterType: pivc.catheterType,
-    therapy: pivc.therapy,
+    therapy: isCustomTherapy ? THERAPY_OTHER_VALUE : pivc.therapy,
+    therapyOther: isCustomTherapy ? pivc.therapy : '',
+    insertedBy: pivc.insertedBy ?? 'Perawat',
     purpose: pivc.purpose ?? '',
     additionalNotes: pivc.additionalNotes ?? '',
     insertionDifficulty: pivc.insertionDifficulty,
@@ -61,7 +71,10 @@ function toFormState(pivc?: Pivc): FormState {
 }
 
 type FormErrors = Partial<
-  Record<'installationDate' | 'installationTime' | 'insertionSite' | 'extremitySide' | 'catheterType' | 'therapy', string>
+  Record<
+    'installationDate' | 'installationTime' | 'insertionSite' | 'extremitySide' | 'catheterType' | 'therapy' | 'therapyOther' | 'insertedBy',
+    string
+  >
 >
 
 function validate(form: FormState): FormErrors {
@@ -72,6 +85,10 @@ function validate(form: FormState): FormErrors {
   if (!form.extremitySide) errors.extremitySide = 'Sisi ekstremitas wajib dipilih.'
   if (!form.catheterType) errors.catheterType = 'Jenis/ukuran kateter wajib dipilih.'
   if (!form.therapy) errors.therapy = 'Jenis terapi/cairan wajib dipilih.'
+  if (form.therapy === THERAPY_OTHER_VALUE && !form.therapyOther.trim()) {
+    errors.therapyOther = 'Nama terapi/cairan wajib diisi.'
+  }
+  if (!form.insertedBy.trim()) errors.insertedBy = 'Nama pemasang wajib diisi.'
   return errors
 }
 
@@ -139,7 +156,8 @@ function PivcForm({ initialPivc, onSave, onCancel }: PivcFormProps) {
       insertionSite: form.insertionSite,
       extremitySide: form.extremitySide,
       catheterType: form.catheterType,
-      therapy: form.therapy,
+      therapy: form.therapy === THERAPY_OTHER_VALUE ? form.therapyOther.trim() : form.therapy,
+      insertedBy: form.insertedBy.trim(),
       purpose: form.purpose.trim() || undefined,
       additionalNotes: form.additionalNotes.trim() || undefined,
       insertionDifficulty: form.insertionDifficulty,
@@ -297,12 +315,45 @@ function PivcForm({ initialPivc, onSave, onCancel }: PivcFormProps) {
                 {option}
               </option>
             ))}
+            <option value={THERAPY_OTHER_VALUE}>Lainnya</option>
           </select>
           {errors.therapy && (
             <p id={fieldId('therapy-error')} className="mt-1 text-xs text-red-600">
               {errors.therapy}
             </p>
           )}
+          {form.therapy === THERAPY_OTHER_VALUE && (
+            <div className="mt-2">
+              <label htmlFor={fieldId('therapy-other')} className="mb-1 block text-sm font-medium text-gray-700">
+                Nama Terapi/Cairan <span className="text-red-500">*</span>
+              </label>
+              <input
+                id={fieldId('therapy-other')}
+                type="text"
+                value={form.therapyOther}
+                onChange={(event) => updateField('therapyOther', event.target.value)}
+                placeholder="Cairan lain..."
+                aria-invalid={Boolean(errors.therapyOther)}
+                className={inputClass(Boolean(errors.therapyOther))}
+              />
+              {errors.therapyOther && <p className="mt-1 text-xs text-red-600">{errors.therapyOther}</p>}
+            </div>
+          )}
+        </div>
+
+        <div className="sm:col-span-2">
+          <label htmlFor={fieldId('insertedBy')} className="mb-1 block text-sm font-medium text-gray-700">
+            Dipasang Oleh <span className="text-red-500">*</span>
+          </label>
+          <input
+            id={fieldId('insertedBy')}
+            type="text"
+            value={form.insertedBy}
+            onChange={(event) => updateField('insertedBy', event.target.value)}
+            aria-invalid={Boolean(errors.insertedBy)}
+            className={inputClass(Boolean(errors.insertedBy))}
+          />
+          {errors.insertedBy && <p className="mt-1 text-xs text-red-600">{errors.insertedBy}</p>}
         </div>
 
         <div className="sm:col-span-2">

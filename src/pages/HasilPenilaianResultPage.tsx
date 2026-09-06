@@ -1,4 +1,4 @@
-import { Lightbulb, Info, Printer, Share2, ZoomIn } from 'lucide-react'
+import { Info, Printer, Share2, ZoomIn } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import DetailField from '../components/DetailField'
@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader'
 import PatientContextCard from '../components/PatientContextCard'
 import PhotoDetailModal from '../components/photos/PhotoDetailModal'
 import PivcContextSummary from '../components/pivc/PivcContextSummary'
+import RecommendationPanel from '../components/recommendations/RecommendationPanel'
 import VipScorePendingNotice from '../components/vip/VipScorePendingNotice'
 import Toast from '../components/Toast'
 import vipRules from '../data/vipRules.json'
@@ -15,6 +16,7 @@ import { usePhotos } from '../hooks/usePhotos'
 import { usePivcs } from '../hooks/usePivcs'
 import type { AssessmentComponents } from '../types/assessment'
 import type { VipRulesConfig } from '../types/vipRules'
+import { calculatePivcDay } from '../utils/datetime'
 import { formatDateID } from '../utils/patient'
 
 const rules = vipRules as VipRulesConfig
@@ -138,6 +140,13 @@ function HasilPenilaianResultPage() {
             </div>
             <DetailField label="Tanggal Penilaian" value={formatDateID(assessment.date)} />
             <DetailField label="Waktu Penilaian" value={assessment.time} />
+            <DetailField label="Dinilai Oleh" value={assessment.assessedBy} />
+            {pivc && (
+              <DetailField
+                label="Lama Pemasangan PIVC"
+                value={`Hari ke-${calculatePivcDay(pivc.installationDate, assessment.date)}`}
+              />
+            )}
           </div>
 
           {assessment.totalScore === null && (
@@ -206,14 +215,8 @@ function HasilPenilaianResultPage() {
         <p className="text-sm text-gray-700">{assessment.notes || 'Tidak ada catatan tambahan.'}</p>
       </div>
 
-      <div className="mt-6 rounded-2xl bg-amber-50 p-5">
-        <div className="mb-2 flex items-center gap-2 text-amber-800">
-          <Lightbulb size={20} />
-          <h2 className="text-lg font-semibold">Rekomendasi</h2>
-        </div>
-        <p className="text-sm text-amber-800">
-          Rekomendasi tindak lanjut akan ditampilkan berdasarkan hasil penilaian dan SOP yang berlaku.
-        </p>
+      <div className="mt-6">
+        <RecommendationPanel score={assessment.totalScore} />
       </div>
 
       <div className="mt-6 flex items-start gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-700">

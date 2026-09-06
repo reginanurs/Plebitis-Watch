@@ -10,6 +10,7 @@
       "pain": "none",
       "erythema": "absent",
       "swelling": "absent",
+      "induration": "absent",
       "venousCord": "absent",
       "pyrexia": "absent"
     },
@@ -28,6 +29,7 @@
       "pain": "none",
       "erythema": "present",
       "swelling": "absent",
+      "induration": "absent",
       "venousCord": "absent",
       "pyrexia": "absent"
     },
@@ -46,6 +48,7 @@
       "pain": "slight_near_site",
       "erythema": "present",
       "swelling": "absent",
+      "induration": "absent",
       "venousCord": "absent",
       "pyrexia": "absent"
     },
@@ -63,13 +66,14 @@
     "components": {
       "pain": "along_cannula",
       "erythema": "present",
-      "swelling": "present",
+      "swelling": "absent",
+      "induration": "present",
       "venousCord": "absent",
       "pyrexia": "absent"
     },
     "totalScore": 3,
     "category": "Stadium sedang phlebitis",
-    "notes": "Nyeri di sepanjang jalur kanula disertai kemerahan dan bengkak pada area insersi; pasien lansia dipantau lebih ketat sesuai SOP."
+    "notes": "Nyeri di sepanjang jalur kanula disertai kemerahan dan indurasi (pengerasan jaringan) pada area insersi; pasien lansia dipantau lebih ketat sesuai SOP."
   },
   {
     "id": "assessment-seed-5",
@@ -81,12 +85,32 @@
     "components": {
       "pain": "along_cannula",
       "erythema": "present",
-      "swelling": "present",
+      "swelling": "absent",
+      "induration": "present",
       "venousCord": "present",
       "pyrexia": "absent"
     },
     "totalScore": 4,
     "category": "Stadium lanjut phlebitis / awal thrombophlebitis",
-    "notes": "Ditemukan tanda phlebitis lanjut: nyeri di sepanjang kanula, kemerahan, bengkak, dan vena teraba seperti tali. PIVC dijadwalkan untuk dilepas dan diganti sesuai SOP."
+    "notes": "Ditemukan tanda phlebitis lanjut: nyeri di sepanjang kanula, kemerahan, indurasi (pengerasan jaringan), dan vena teraba seperti tali. PIVC dijadwalkan untuk dilepas dan diganti sesuai SOP."
+  },
+  {
+    "id": "assessment-seed-6",
+    "patientId": "seed-6",
+    "pivcId": "pivc-seed-5",
+    "date": "2026-09-05",
+    "time": "18:00",
+    "assessedBy": "Perawat",
+    "components": {
+      "pain": "along_cannula",
+      "erythema": "present",
+      "swelling": "absent",
+      "induration": "present",
+      "venousCord": "present",
+      "pyrexia": "present"
+    },
+    "totalScore": 5,
+    "category": "Stadium lanjut thrombophlebitis",
+    "notes": "Seluruh tanda stadium lanjut ditemukan bersamaan, termasuk demam. Sesuai rekomendasi, kanula perlu segera dilepas dan pasien dirujuk untuk evaluasi medis lebih lanjut sesuai SOP fasilitas."
   }
 ]

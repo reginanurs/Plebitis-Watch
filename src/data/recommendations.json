@@ -1,5 +1,96 @@
 {
-  "clinicalStatus": "pending",
-  "rules": [],
-  "note": "PENDING: recommendation rules require confirmation against the applicable SOP/protocol before they can be configured here. The supplied UI reference shows example action items (\"Lakukan Pemantauan Kembali\", \"Observasi Tanda dan Gejala\", \"Perawatan Area Insersi\", \"Dokumentasi\") for a category-2 (Ringan) result — these are mockup illustrations only and must NOT be treated as a confirmed clinical recommendation matrix. Do not add rule entries by inferring them from that mockup; only add a rule here once the facility's SOP/protocol has been supplied and explicitly mapped to a VIP Score category, and set clinicalStatus to \"confirmed\" once at least one real rule exists."
+  "clinicalStatus": "prototype",
+  "note": "PROTOTYPE REQUIREMENT — bukan standar klinis universal. Rekomendasi di bawah adalah usulan prototipe internal untuk keperluan demonstrasi alur kerja aplikasi, dan BELUM divalidasi terhadap SOP/protokol fasilitas pelayanan kesehatan manapun. Setiap fasilitas wajib menyesuaikan/menggantikan aturan ini dengan SOP resmi sebelum digunakan pada kondisi klinis nyata.",
+  "rules": [
+    {
+      "id": "recommendation-score-0",
+      "score": 0,
+      "category": "Tidak ada tanda phlebitis",
+      "title": "Observasi Kanula",
+      "description": "Pantau kondisi kanula secara berkala.",
+      "actions": [
+        {
+          "id": "action-0-1",
+          "title": "Pantau kondisi kanula secara berkala",
+          "description": "Interval pemantauan prototipe: setiap shift."
+        }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    },
+    {
+      "id": "recommendation-score-1",
+      "score": 1,
+      "category": "Kemungkinan tanda awal phlebitis",
+      "title": "Observasi Kanula dengan Peningkatan Pemantauan",
+      "description": "Tingkatkan frekuensi observasi area insersi dibanding pemantauan rutin.",
+      "actions": [
+        {
+          "id": "action-1-1",
+          "title": "Tingkatkan frekuensi observasi",
+          "description": "Interval pemantauan prototipe: setiap 4 jam."
+        }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    },
+    {
+      "id": "recommendation-score-2",
+      "score": 2,
+      "category": "Stadium awal phlebitis",
+      "title": "Pindahkan/Resite Kanula",
+      "description": "Lepas kanula dan pasang pada lokasi baru.",
+      "actions": [
+        { "id": "action-2-1", "title": "Lepas kanula dari lokasi saat ini" },
+        { "id": "action-2-2", "title": "Pasang PIVC baru pada lokasi insersi yang berbeda", "description": "Sesuai SOP pemasangan yang berlaku." }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    },
+    {
+      "id": "recommendation-score-3",
+      "score": 3,
+      "category": "Stadium sedang phlebitis",
+      "title": "Pindahkan/Resite Kanula",
+      "description": "Lepas kanula dan pasang pada lokasi baru, serta pertimbangkan evaluasi/pengobatan medis tambahan.",
+      "actions": [
+        { "id": "action-3-1", "title": "Lepas kanula dan pasang pada lokasi baru" },
+        { "id": "action-3-2", "title": "Pertimbangkan evaluasi/pengobatan medis tambahan", "description": "Konsultasikan dengan dokter/tenaga medis terkait untuk evaluasi lebih lanjut." }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    },
+    {
+      "id": "recommendation-score-4",
+      "score": 4,
+      "category": "Stadium lanjut phlebitis / awal thrombophlebitis",
+      "title": "Pindahkan/Resite Kanula",
+      "description": "Lepas kanula dan pasang pada lokasi baru, serta pertimbangkan pengobatan medis segera.",
+      "actions": [
+        { "id": "action-4-1", "title": "Lepas kanula dan pasang pada lokasi baru" },
+        { "id": "action-4-2", "title": "Pertimbangkan pengobatan medis segera", "description": "Segera konsultasikan ke dokter/tenaga medis untuk tindak lanjut." }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    },
+    {
+      "id": "recommendation-score-5",
+      "score": 5,
+      "category": "Stadium lanjut thrombophlebitis",
+      "title": "Pindahkan/Resite Kanula",
+      "description": "Lepas kanula dan pasang pada lokasi baru, serta tindak lanjuti secara medis intensif.",
+      "actions": [
+        { "id": "action-5-1", "title": "Lepas kanula dan pasang pada lokasi baru" },
+        { "id": "action-5-2", "title": "Tindak lanjuti secara medis intensif", "description": "Segera lakukan evaluasi dan tindak lanjut medis intensif sesuai kebijakan fasilitas." }
+      ],
+      "source": "Usulan prototipe internal — memerlukan validasi SOP fasilitas",
+      "facilitySopRequired": true,
+      "status": "active"
+    }
+  ]
 }

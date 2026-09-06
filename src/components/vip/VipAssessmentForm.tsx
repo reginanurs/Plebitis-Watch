@@ -1,4 +1,6 @@
+import { CheckCircle2 } from 'lucide-react'
 import { useId, useMemo, useState, type FormEvent } from 'react'
+import PhotoCaptureArea from '../photos/PhotoCaptureArea'
 import type { AssessmentComponents } from '../../types/assessment'
 import type { VipRulesConfig } from '../../types/vipRules'
 import { nowTimeString, todayDateString } from '../../utils/datetime'
@@ -12,6 +14,8 @@ export interface AssessmentFormValues {
   assessedBy: string
   components: AssessmentComponents
   notes?: string
+  /** Captured inline via the "Tambah Foto" shortcut — held here until the assessment is saved. */
+  photoImageData?: string
 }
 
 interface VipAssessmentFormProps {
@@ -25,12 +29,14 @@ interface FormState {
   assessedBy: string
   components: AssessmentComponents
   notes: string
+  photoImageData: string | undefined
 }
 
 const EMPTY_COMPONENTS: AssessmentComponents = {
   pain: '',
   erythema: '',
   swelling: '',
+  induration: '',
   venousCord: '',
   pyrexia: '',
 }
@@ -42,6 +48,7 @@ function defaultFormState(): FormState {
     assessedBy: 'Perawat',
     components: { ...EMPTY_COMPONENTS },
     notes: '',
+    photoImageData: undefined,
   }
 }
 
@@ -78,6 +85,10 @@ function VipAssessmentForm({ rules, onSave }: VipAssessmentFormProps) {
     setErrors((prev) => ({ ...prev, [field]: undefined }))
   }
 
+  function updatePhoto(dataUrl: string | undefined) {
+    setForm((prev) => ({ ...prev, photoImageData: dataUrl }))
+  }
+
   function handleReset() {
     setForm(defaultFormState())
     setErrors({})
@@ -98,6 +109,7 @@ function VipAssessmentForm({ rules, onSave }: VipAssessmentFormProps) {
         assessedBy: form.assessedBy.trim(),
         components: form.components,
         notes: form.notes.trim() || undefined,
+        photoImageData: form.photoImageData,
       },
       liveResult,
     )
@@ -134,6 +146,22 @@ function VipAssessmentForm({ rules, onSave }: VipAssessmentFormProps) {
               error={errors[componentDef.id]}
             />
           ))}
+        </div>
+
+        <div className="mt-6 border-t border-gray-100 pt-5">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-medium text-gray-700">Tambah Foto (Opsional)</p>
+            {form.photoImageData && (
+              <span className="flex items-center gap-1 text-xs font-medium text-teal-700">
+                <CheckCircle2 size={14} />
+                Foto ditambahkan
+              </span>
+            )}
+          </div>
+          <p className="mb-3 text-xs text-gray-500">
+            Ambil atau unggah foto monitoring area insersi untuk dikaitkan langsung dengan penilaian ini.
+          </p>
+          <PhotoCaptureArea imageData={form.photoImageData} onImageSelected={updatePhoto} onRemove={() => updatePhoto(undefined)} />
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-4 border-t border-gray-100 pt-5 sm:grid-cols-3">

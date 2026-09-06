@@ -3,5 +3,14 @@
   "defaultIntervalMinutes": 240,
   "intervalUnit": "hours",
   "source": "Prototype demonstration only",
-  "clinicalStatus": "demo"
+  "clinicalStatus": "demo",
+  "scoreBasedIntervals": {
+    "score0Minutes": 480,
+    "score1Minutes": 240
+  },
+  "specialTherapyMonitoring": {
+    "enabled": false,
+    "stageMinutes": [15, 30, 60],
+    "note": "Prototype / opsional — memerlukan kebijakan fasilitas sebelum diaktifkan. Interval 15/30/60 menit bukan standar klinis universal."
+  }
 }

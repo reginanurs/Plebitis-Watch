@@ -13,6 +13,9 @@ export interface Pivc {
   catheterType: string
   therapy: string
 
+  /** Who performed the PIVC insertion — distinct from an assessment's "assessedBy" (who did the monitoring). */
+  insertedBy?: string
+
   purpose?: string
   additionalNotes?: string
 

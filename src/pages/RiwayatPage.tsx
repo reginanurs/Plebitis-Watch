@@ -1,4 +1,4 @@
-import { ClipboardList } from 'lucide-react'
+import { ClipboardList, Download } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import MonitoringHistoryTable from '../components/history/MonitoringHistoryTable'
@@ -9,7 +9,9 @@ import { usePatients } from '../hooks/usePatients'
 import { usePhotos } from '../hooks/usePhotos'
 import { usePivcs } from '../hooks/usePivcs'
 import type { Patient } from '../types/patient'
+import { buildCsv, downloadCsv } from '../utils/csv'
 import { isWithinPeriod, type PeriodFilter } from '../utils/datetime'
+import { formatDateID } from '../utils/patient'
 
 const PENDING_CATEGORY = '__pending__'
 
@@ -89,6 +91,43 @@ function RiwayatPage() {
   const hasAnyAssessments = assessments.length > 0
   const hasActiveFilters = Boolean(searchTerm || patientFilter || periodFilter !== 'all' || categoryFilter)
 
+  function handleExportCsv() {
+    const headers = [
+      'Tanggal',
+      'Waktu',
+      'Nama Pasien',
+      'No. Rekam Medis',
+      'PIVC',
+      'Lokasi',
+      'VIP Score',
+      'Kategori',
+      'Dinilai Oleh',
+      'Foto',
+      'Catatan',
+    ]
+
+    const csvRows = sortedRows.map(({ assessment, patient, pivc, photo }) => [
+      formatDateID(assessment.date),
+      assessment.time,
+      patient?.name ?? 'Data pasien tidak ditemukan',
+      patient?.medicalRecordNumber ?? '-',
+      pivc ? `${pivc.insertionSite} / ${pivc.extremitySide}` : 'Data PIVC tidak ditemukan',
+      pivc?.insertionSite ?? '-',
+      assessment.totalScore !== null ? String(assessment.totalScore) : 'Belum tersedia',
+      assessment.category ?? 'Belum tersedia',
+      assessment.assessedBy,
+      photo ? 'Ada' : '-',
+      assessment.notes ?? '',
+    ])
+
+    const csvContent = buildCsv(headers, csvRows)
+    downloadCsv(`riwayat-monitoring-${todayForFilename()}.csv`, csvContent)
+  }
+
+  function todayForFilename() {
+    return new Date().toISOString().slice(0, 10)
+  }
+
   return (
     <div>
       <PageHeader
@@ -165,7 +204,23 @@ function RiwayatPage() {
               <option value="newest">Terbaru</option>
               <option value="oldest">Terlama</option>
             </select>
+
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              disabled={sortedRows.length === 0}
+              className="flex items-center justify-center gap-2 rounded-lg border border-teal-700 px-4 py-2 text-sm font-medium text-teal-800 hover:bg-teal-50 disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent lg:ml-auto"
+            >
+              <Download size={16} />
+              Export Riwayat
+            </button>
           </div>
+
+          {hasActiveFilters && (
+            <p className="mb-4 text-xs text-gray-400">
+              Export data yang sedang ditampilkan ({sortedRows.length} dari {assessments.length} total riwayat).
+            </p>
+          )}
 
           <MonitoringHistoryTable
             rows={sortedRows}

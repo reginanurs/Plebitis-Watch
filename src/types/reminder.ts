@@ -1,3 +1,5 @@
+import type { ReminderTriggerType } from './reminderSettings'
+
 /**
  * `status` is intentionally NOT stored on the reminder — it must always be
  * derived live from `nextMonitoringAt` vs. the current time (see
@@ -24,6 +26,9 @@ export interface Reminder {
    * `null` means no source has been configured yet.
    */
   source: string | null
+
+  /** Which condition produced this reminder. Optional/undefined on legacy records — treat as unknown, not an error. */
+  triggerType?: ReminderTriggerType
 
   createdAt: string
   updatedAt: string

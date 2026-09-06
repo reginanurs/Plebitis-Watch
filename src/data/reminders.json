@@ -3,29 +3,29 @@
     "id": "reminder-seed-1",
     "patientId": "seed-1",
     "pivcId": "pivc-seed-1",
-    "nextMonitoringAt": "2026-09-05T14:00:00",
+    "nextMonitoringAt": "2026-09-06T20:30:00",
     "intervalMinutes": 240,
     "enabled": true,
     "source": "Demo prototype",
-    "createdAt": "2026-09-02T14:30:00.000Z",
-    "updatedAt": "2026-09-02T14:30:00.000Z"
+    "createdAt": "2026-09-04T10:15:00.000Z",
+    "updatedAt": "2026-09-04T10:15:00.000Z"
   },
   {
     "id": "reminder-seed-2",
     "patientId": "seed-8",
     "pivcId": "pivc-seed-3",
-    "nextMonitoringAt": "2026-09-05T20:30:00",
+    "nextMonitoringAt": "2026-09-06T18:00:00",
     "intervalMinutes": 240,
     "enabled": true,
     "source": "Demo prototype",
-    "createdAt": "2026-09-04T08:45:00.000Z",
-    "updatedAt": "2026-09-04T08:45:00.000Z"
+    "createdAt": "2026-09-04T09:00:00.000Z",
+    "updatedAt": "2026-09-04T09:00:00.000Z"
   },
   {
     "id": "reminder-seed-3",
     "patientId": "seed-2",
     "pivcId": "pivc-seed-4",
-    "nextMonitoringAt": "2026-09-05T23:00:00",
+    "nextMonitoringAt": "2026-09-06T23:30:00",
     "intervalMinutes": 240,
     "enabled": true,
     "source": "Demo prototype",
@@ -36,11 +36,11 @@
     "id": "reminder-seed-4",
     "patientId": "seed-6",
     "pivcId": "pivc-seed-5",
-    "nextMonitoringAt": "2026-09-06T09:00:00",
+    "nextMonitoringAt": "2026-09-07T09:00:00",
     "intervalMinutes": 240,
     "enabled": true,
     "source": "Demo prototype",
-    "createdAt": "2026-09-04T16:00:00.000Z",
-    "updatedAt": "2026-09-04T16:00:00.000Z"
+    "createdAt": "2026-09-05T18:00:00.000Z",
+    "updatedAt": "2026-09-05T18:00:00.000Z"
   }
 ]

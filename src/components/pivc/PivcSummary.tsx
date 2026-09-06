@@ -34,6 +34,7 @@ function PivcSummary({ pivc }: PivcSummaryProps) {
         <Field label="Sisi Ekstremitas" value={pivc.extremitySide} />
         <Field label="Jenis/Ukuran Kateter" value={pivc.catheterType} />
         <Field label="Jenis Terapi/Cairan" value={pivc.therapy} />
+        <Field label="Dipasang Oleh" value={pivc.insertedBy || '-'} />
         <Field label="Tujuan Pemasangan" value={pivc.purpose || '-'} />
         <Field label="Kesulitan Pemasangan" value={pivc.insertionDifficulty ? 'Ya' : 'Tidak'} />
         <Field label="Dilakukan Perawat Lain" value={pivc.insertedByAnotherNurse ? 'Ya' : 'Tidak'} />

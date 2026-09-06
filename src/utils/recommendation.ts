@@ -7,34 +7,44 @@ export type RecommendationResult =
   | { status: 'ok'; rule: RecommendationRule }
 
 /**
- * Resolves the recommendation for a saved assessment using ONLY the
+ * Resolves the recommendation for a given VIP Score using ONLY the
  * configured rules — it never calculates, infers, or falls back to a
- * default recommendation. If the assessment's category is null, or no
- * active rule is configured for that category, this returns a
- * pending state instead of guessing.
+ * default recommendation. If `score` is null, or no active rule is
+ * configured for that exact score, this returns a pending state
+ * instead of guessing.
+ *
+ * This is the single source of truth for recommendation matching —
+ * both the live preview shown while an assessment is being filled in
+ * and the saved Result page call this with the same score value.
  */
-export function getRecommendationForAssessment(
-  assessment: Assessment,
+export function getRecommendationForScore(
+  score: number | null,
   config: RecommendationConfig,
 ): RecommendationResult {
-  if (assessment.category === null) {
+  if (score === null) {
     return {
       status: 'pending_category',
-      reason: 'Kategori VIP Score belum tersedia, sehingga rekomendasi belum dapat ditentukan.',
+      reason: 'VIP Score belum tersedia, sehingga rekomendasi belum dapat ditentukan.',
     }
   }
 
-  if (config.clinicalStatus !== 'confirmed') {
+  if (config.clinicalStatus === 'pending') {
     return { status: 'pending_rules', reason: 'Rekomendasi tindak lanjut belum dikonfigurasi.' }
   }
 
-  const matchedRule = config.rules.find(
-    (rule) => rule.category === assessment.category && rule.status === 'active',
-  )
+  const matchedRule = config.rules.find((rule) => rule.score === score && rule.status === 'active')
 
   if (!matchedRule) {
     return { status: 'pending_rules', reason: 'Rekomendasi tindak lanjut belum dikonfigurasi.' }
   }
 
   return { status: 'ok', rule: matchedRule }
+}
+
+/** Convenience wrapper for a saved assessment — reads its stored `totalScore`, never recalculates. */
+export function getRecommendationForAssessment(
+  assessment: Assessment,
+  config: RecommendationConfig,
+): RecommendationResult {
+  return getRecommendationForScore(assessment.totalScore, config)
 }

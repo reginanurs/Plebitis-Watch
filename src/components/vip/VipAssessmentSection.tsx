@@ -11,9 +11,10 @@ interface VipAssessmentSectionProps {
 function VipAssessmentSection({ component, selectedOptionId, onSelect, error }: VipAssessmentSectionProps) {
   return (
     <div>
-      <p className="mb-2 text-sm font-medium text-gray-700">
+      <p className="mb-1 text-sm font-medium text-gray-700">
         {component.order}. {component.label}
       </p>
+      {component.helperText && <p className="mb-2 text-xs text-gray-400">{component.helperText}</p>}
       <div className="flex flex-wrap gap-2">
         {component.options.map((option) => (
           <VipOptionButton

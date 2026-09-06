@@ -26,16 +26,16 @@
     "actionPath": "/penilaian/seed-6"
   },
   {
-    "id": "reminder-reminder-seed-1-overdue",
+    "id": "reminder-reminder-seed-1-due_soon",
     "type": "monitoring_reminder",
     "title": "Reminder PLEBITIS WATCH",
-    "message": "Jadwal pemantauan PIVC pasien telah terlambat. Segera lakukan penilaian VIP Score.",
+    "message": "Waktu pemantauan PIVC pasien telah tiba.",
     "patientId": "seed-1",
     "pivcId": "pivc-seed-1",
     "reminderId": "reminder-seed-1",
-    "createdAt": "2026-09-05T14:05:00.000Z",
+    "createdAt": "2026-09-06T12:30:00.000Z",
     "read": false,
-    "priority": "important",
+    "priority": "normal",
     "actionPath": "/penilaian/seed-1"
   },
   {

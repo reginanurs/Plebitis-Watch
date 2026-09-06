@@ -1,10 +1,13 @@
 import type { Pivc } from '../../types/pivc'
+import { calculatePivcDay } from '../../utils/datetime'
 import { formatDateID } from '../../utils/patient'
 import PivcStatusBadge from './PivcStatusBadge'
 
 interface PivcContextSummaryProps {
   pivc: Pivc
   title?: string
+  /** When provided, shows "Hari ke-X pemasangan" relative to this date (e.g. the assessment/photo date). */
+  referenceDate?: string
 }
 
 function ContextField({ label, value }: { label: string; value: string }) {
@@ -16,7 +19,7 @@ function ContextField({ label, value }: { label: string; value: string }) {
   )
 }
 
-function PivcContextSummary({ pivc, title = 'Konteks PIVC Aktif' }: PivcContextSummaryProps) {
+function PivcContextSummary({ pivc, title = 'Konteks PIVC Aktif', referenceDate }: PivcContextSummaryProps) {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
@@ -29,6 +32,9 @@ function PivcContextSummary({ pivc, title = 'Konteks PIVC Aktif' }: PivcContextS
         <ContextField label="Jenis/Ukuran Kateter" value={pivc.catheterType} />
         <ContextField label="Tanggal Pemasangan" value={formatDateID(pivc.installationDate)} />
         <ContextField label="Waktu Pemasangan" value={pivc.installationTime} />
+        {referenceDate && (
+          <ContextField label="Lama Pemasangan" value={`Hari ke-${calculatePivcDay(pivc.installationDate, referenceDate)}`} />
+        )}
       </dl>
     </div>
   )

@@ -26,7 +26,7 @@
     },
     {
       "id": "swelling",
-      "label": "Pembengkakan",
+      "label": "Pembengkakan (Edema)",
       "order": 3,
       "options": [
         { "id": "absent", "label": "Tidak ada pembengkakan", "meetsSign": false },
@@ -34,9 +34,19 @@
       ]
     },
     {
+      "id": "induration",
+      "label": "Indurasi (Pengerasan Jaringan Kulit)",
+      "order": 4,
+      "helperText": "Indurasi — pengerasan jaringan kulit di sekitar area insersi.",
+      "options": [
+        { "id": "absent", "label": "Tidak ada indurasi", "meetsSign": false },
+        { "id": "present", "label": "Indurasi pada area insersi", "meetsSign": true }
+      ]
+    },
+    {
       "id": "venousCord",
       "label": "Palpable Venous Cord (Vena Teraba Seperti Tali)",
-      "order": 4,
+      "order": 5,
       "options": [
         { "id": "absent", "label": "Tidak teraba", "meetsSign": false },
         { "id": "present", "label": "Vena teraba seperti tali", "meetsSign": true }
@@ -45,7 +55,7 @@
     {
       "id": "pyrexia",
       "label": "Demam (Pyrexia)",
-      "order": 5,
+      "order": 6,
       "options": [
         { "id": "absent", "label": "Tidak demam", "meetsSign": false },
         { "id": "present", "label": "Demam", "meetsSign": true }
@@ -53,9 +63,9 @@
     }
   ],
   "rules": [
-    { "score": 5, "requires": { "severePain": true, "erythema": true, "swelling": true, "venousCord": true, "pyrexia": true } },
-    { "score": 4, "requires": { "severePain": true, "erythema": true, "swelling": true, "venousCord": true } },
-    { "score": 3, "requires": { "severePain": true, "erythema": true, "swelling": true } },
+    { "score": 5, "requires": { "severePain": true, "erythema": true, "induration": true, "venousCord": true, "pyrexia": true } },
+    { "score": 4, "requires": { "severePain": true, "erythema": true, "induration": true, "venousCord": true } },
+    { "score": 3, "requires": { "severePain": true, "erythema": true, "induration": true } },
     { "score": 2, "countAtLeast": { "count": 2, "from": ["pain", "erythema", "swelling"] } },
     { "score": 1, "anyOf": ["pain", "erythema"] },
     { "score": 0 }

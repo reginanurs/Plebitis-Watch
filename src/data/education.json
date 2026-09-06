@@ -74,7 +74,8 @@
         "bullets": [
           "Nyeri (tidak ada, nyeri ringan di sekitar area insersi, atau nyeri di sepanjang jalur kanula)",
           "Eritema (kemerahan) pada area insersi",
-          "Pembengkakan pada area insersi",
+          "Pembengkakan (edema) pada area insersi",
+          "Indurasi — pengerasan jaringan kulit di sekitar area insersi",
           "Palpable venous cord (vena teraba seperti tali)",
           "Demam (pyrexia)"
         ]
@@ -161,8 +162,7 @@
           "Data PIVC — mencatat pemasangan kateter intravena perifer",
           "Penilaian VIP Score — melakukan observasi area insersi",
           "Dokumentasi Foto — menyimpan bukti visual pendukung",
-          "Hasil Penilaian — meninjau ringkasan hasil observasi",
-          "Rekomendasi — meninjau dukungan keputusan klinis yang tersedia",
+          "Hasil Penilaian — meninjau ringkasan hasil observasi beserta rekomendasi tindak lanjut yang tersedia",
           "Reminder — mengatur jadwal pemantauan berikutnya",
           "Riwayat & Grafik — meninjau perkembangan data secara longitudinal"
         ]

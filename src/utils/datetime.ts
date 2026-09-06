@@ -1,3 +1,23 @@
+function parseDateOnly(dateStr: string): { year: number; month: number; day: number } {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return { year, month: month - 1, day }
+}
+
+/**
+ * Day count since PIVC installation, where the installation day itself is
+ * "Hari ke-1" — e.g. installed 1 Sep, referenced on 4 Sep → "Hari ke-4".
+ * Compares calendar dates only (via UTC-normalized components, not local
+ * `Date` getters) so it is not affected by time-of-day or timezone.
+ */
+export function calculatePivcDay(installationDate: string, referenceDate: string): number {
+  const install = parseDateOnly(installationDate)
+  const reference = parseDateOnly(referenceDate)
+  const installUTC = Date.UTC(install.year, install.month, install.day)
+  const referenceUTC = Date.UTC(reference.year, reference.month, reference.day)
+  const diffDays = Math.round((referenceUTC - installUTC) / (24 * 60 * 60 * 1000))
+  return diffDays + 1
+}
+
 export function todayDateString(): string {
   return new Date().toISOString().slice(0, 10)
 }
