@@ -19,9 +19,6 @@ export interface Pivc {
   purpose?: string
   additionalNotes?: string
 
-  insertionDifficulty: boolean
-  insertedByAnotherNurse: boolean
-
   initialPhotoId?: string
 
   status: PivcStatus

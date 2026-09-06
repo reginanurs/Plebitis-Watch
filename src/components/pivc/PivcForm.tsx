@@ -32,8 +32,6 @@ interface FormState {
   insertedBy: string
   purpose: string
   additionalNotes: string
-  insertionDifficulty: boolean
-  insertedByAnotherNurse: boolean
 }
 
 function toFormState(pivc?: Pivc): FormState {
@@ -49,8 +47,6 @@ function toFormState(pivc?: Pivc): FormState {
       insertedBy: 'Perawat',
       purpose: '',
       additionalNotes: '',
-      insertionDifficulty: false,
-      insertedByAnotherNurse: false,
     }
   }
   const isCustomTherapy = Boolean(pivc.therapy) && !THERAPY_OPTIONS.includes(pivc.therapy)
@@ -65,8 +61,6 @@ function toFormState(pivc?: Pivc): FormState {
     insertedBy: pivc.insertedBy ?? 'Perawat',
     purpose: pivc.purpose ?? '',
     additionalNotes: pivc.additionalNotes ?? '',
-    insertionDifficulty: pivc.insertionDifficulty,
-    insertedByAnotherNurse: pivc.insertedByAnotherNurse,
   }
 }
 
@@ -160,8 +154,6 @@ function PivcForm({ initialPivc, onSave, onCancel }: PivcFormProps) {
       insertedBy: form.insertedBy.trim(),
       purpose: form.purpose.trim() || undefined,
       additionalNotes: form.additionalNotes.trim() || undefined,
-      insertionDifficulty: form.insertionDifficulty,
-      insertedByAnotherNurse: form.insertedByAnotherNurse,
       initialPhotoId: photoId,
     })
   }
@@ -387,27 +379,6 @@ function PivcForm({ initialPivc, onSave, onCancel }: PivcFormProps) {
           rows={3}
           className={inputClass(false)}
         />
-      </div>
-
-      <div className="mt-4 flex flex-col gap-3">
-        <label className="flex items-center gap-2 text-sm text-gray-700">
-          <input
-            type="checkbox"
-            checked={!form.insertionDifficulty}
-            onChange={(event) => updateField('insertionDifficulty', !event.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-teal-700 focus:ring-teal-700"
-          />
-          Tidak ada kesulitan pada saat pemasangan
-        </label>
-        <label className="flex items-center gap-2 text-sm text-gray-700">
-          <input
-            type="checkbox"
-            checked={form.insertedByAnotherNurse}
-            onChange={(event) => updateField('insertedByAnotherNurse', event.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-teal-700 focus:ring-teal-700"
-          />
-          Dilakukan oleh perawat lain
-        </label>
       </div>
 
       <div className="mt-5 rounded-lg border border-gray-100 bg-gray-50 p-4">

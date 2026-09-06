@@ -11,8 +11,6 @@
     "insertedBy": "Perawat",
     "purpose": "Terapi cairan dan antibiotik",
     "additionalNotes": "Insersi mudah, darah balik lancar, fiksasi dengan transparent dressing.",
-    "insertionDifficulty": false,
-    "insertedByAnotherNurse": false,
     "status": "active"
   },
   {
@@ -27,8 +25,6 @@
     "insertedBy": "Perawat",
     "purpose": "Rehidrasi",
     "additionalNotes": "PIVC telah dilepas setelah terapi selesai.",
-    "insertionDifficulty": false,
-    "insertedByAnotherNurse": true,
     "status": "removed"
   },
   {
@@ -43,8 +39,6 @@
     "insertedBy": "Perawat",
     "purpose": "Terapi cairan rumatan",
     "additionalNotes": "Pasien lansia, area insersi dipantau lebih ketat. Jenis terapi dicatat sebagai \"Lainnya\" karena tidak tersedia pada pilihan baku.",
-    "insertionDifficulty": true,
-    "insertedByAnotherNurse": false,
     "status": "active"
   },
   {
@@ -59,8 +53,6 @@
     "insertedBy": "Perawat",
     "purpose": "Terapi cairan rumatan",
     "additionalNotes": "",
-    "insertionDifficulty": false,
-    "insertedByAnotherNurse": false,
     "status": "active"
   },
   {
@@ -75,8 +67,6 @@
     "insertedBy": "Perawat",
     "purpose": "Terapi cairan dan elektrolit",
     "additionalNotes": "",
-    "insertionDifficulty": false,
-    "insertedByAnotherNurse": false,
     "status": "active"
   }
 ]

@@ -36,8 +36,6 @@ function PivcSummary({ pivc }: PivcSummaryProps) {
         <Field label="Jenis Terapi/Cairan" value={pivc.therapy} />
         <Field label="Dipasang Oleh" value={pivc.insertedBy || '-'} />
         <Field label="Tujuan Pemasangan" value={pivc.purpose || '-'} />
-        <Field label="Kesulitan Pemasangan" value={pivc.insertionDifficulty ? 'Ya' : 'Tidak'} />
-        <Field label="Dilakukan Perawat Lain" value={pivc.insertedByAnotherNurse ? 'Ya' : 'Tidak'} />
         <div className="sm:col-span-2 lg:col-span-3">
           <Field label="Keterangan Tambahan" value={pivc.additionalNotes || '-'} />
         </div>
