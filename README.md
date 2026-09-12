@@ -11,9 +11,9 @@ Plebitis Watch is a front-end-only prototype for a digital nursing application. 
 - Monitoring reminders
 - Notifications
 - Education
-- Prototype login simulation
+- Real authentication via Supabase Auth
 
-This is a **prototype for demonstration and simulation purposes only**. It is not a certified medical device and must not be used for real clinical decision-making.
+This is a **prototype for demonstration and simulation purposes only**. It is not a certified medical device and must not be used for real clinical decision-making. As of Phase 20, authentication is backed by a real Supabase project; clinical/patient data still lives in local mock JSON + `localStorage` and will be migrated to Supabase in later phases.
 
 ## Tech Stack
 
@@ -24,6 +24,7 @@ This is a **prototype for demonstration and simulation purposes only**. It is no
 - React Router
 - Lucide React (icons)
 - Recharts (charts)
+- Supabase (Auth — clinical data migration in progress, see Status below)
 
 ## Project Structure
 
@@ -40,6 +41,20 @@ src/
 ├── main.tsx
 └── index.css
 ```
+
+## Supabase Setup
+
+Authentication requires a Supabase project.
+
+1. Copy `.env.example` to `.env` and fill in your project's URL and publishable/anon key (from Supabase Dashboard → Project Settings → API).
+2. Run [`supabase/schema.sql`](supabase/schema.sql) once in Supabase Dashboard → SQL Editor. It creates the `profiles` table (used for login) plus all clinical-data tables as forward-looking foundation for later migration phases, with Row Level Security enabled.
+3. Create demo users manually in Dashboard → Authentication → Users → Add user, with **Auto Confirm User** enabled and User Metadata such as:
+   ```json
+   { "name": "Perawat Demo", "role": "Perawat" }
+   ```
+   A trigger auto-creates the matching `profiles` row from this metadata. `name`/`role` are shown in the app header.
+
+Never commit `.env` — it holds real credentials. `.env.example` holds placeholders only.
 
 ## Run Locally
 
@@ -68,14 +83,7 @@ Serves the production build locally so you can verify it before deploying.
 
 ## Demo Login
 
-Login is a **front-end simulation only** — there is no backend, no real authentication server, and no password hashing. Credentials are checked against a small fictional demo user list in `src/data/users.json`.
-
-Demo credentials (fictional, for prototype use only):
-
-| Identitas Pengguna | Kata Sandi   |
-| ------------------ | ------------ |
-| `perawat1`         | `perawat123` |
-| `admin`            | `admin123`   |
+Login uses **real Supabase Auth** (email + password) — there are no hardcoded demo credentials in the codebase. Create accounts yourself following the Supabase Setup section above, then sign in with the email/password you chose when creating each user in the Dashboard.
 
 ## Deployment
 
@@ -84,12 +92,12 @@ This project is a static frontend and is intended to be deployed to **Vercel** (
 - Build command: `npm run build`
 - Output directory: `dist`
 - `vercel.json` includes a SPA rewrite (`/(.*) → /index.html`) so client-side routes (e.g. `/pasien`, `/hasil-penilaian/:id`) work correctly when opened directly instead of returning a 404.
-- No environment variables are required.
+- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables in the hosting provider (e.g. Vercel Project Settings → Environment Variables) so the deployed build can authenticate.
 
 ## Important Note
 
-This is a prototype. It is **not** production authentication, a certified medical device, or a replacement for professional clinical assessment and judgment. All clinical logic (VIP Score, recommendations) follows configured rules only and never fabricates values.
+This is a prototype. It is **not** a certified medical device or a replacement for professional clinical assessment and judgment. All clinical logic (VIP Score, recommendations) follows configured rules only and never fabricates values.
 
 ## Status
 
-All data is simulated locally using mock JSON seed data and, where persistence across sessions is needed, browser `localStorage`. There is no backend, database, or authentication server.
+Authentication is real, backed by Supabase Auth. Clinical/operational data (patients, PIVCs, assessments, photos, reminders, notifications) is still simulated locally using mock JSON seed data and browser `localStorage`; migrating each of these to Supabase is planned for later phases.

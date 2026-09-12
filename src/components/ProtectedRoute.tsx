@@ -1,12 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import RouteLoadingScreen from './RouteLoadingScreen'
 
-/** Centralizes the auth gate so individual pages never need their own check. */
 function ProtectedRoute() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
 
+  if (isLoading) return <RouteLoadingScreen />
   if (!isAuthenticated) return <Navigate to="/login" replace />
-
   return <Outlet />
 }
 

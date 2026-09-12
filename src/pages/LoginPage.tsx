@@ -1,10 +1,10 @@
-import { Eye, EyeOff, Lock, LogIn, UserRound } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock, LogIn, Mail } from 'lucide-react'
 import { useId, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 interface FormErrors {
-  username?: string
+  email?: string
   password?: string
 }
 
@@ -13,11 +13,12 @@ function LoginPage() {
   const navigate = useNavigate()
   const formId = useId()
 
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
   const [loginError, setLoginError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function fieldId(name: string) {
     return `${formId}-${name}`
@@ -31,11 +32,11 @@ function LoginPage() {
     }`
   }
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
 
     const validationErrors: FormErrors = {}
-    if (!username.trim()) validationErrors.username = 'Identitas pengguna wajib diisi.'
+    if (!email.trim()) validationErrors.email = 'Email wajib diisi.'
     if (!password) validationErrors.password = 'Kata sandi wajib diisi.'
 
     setErrors(validationErrors)
@@ -43,9 +44,12 @@ function LoginPage() {
 
     if (Object.keys(validationErrors).length > 0) return
 
-    const success = login(username, password)
-    if (!success) {
-      setLoginError('Identitas pengguna atau kata sandi tidak sesuai.')
+    setIsSubmitting(true)
+    const errorMessage = await login(email, password)
+    setIsSubmitting(false)
+
+    if (errorMessage) {
+      setLoginError('Email atau kata sandi tidak sesuai.')
       return
     }
 
@@ -65,26 +69,26 @@ function LoginPage() {
 
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <div>
-            <label htmlFor={fieldId('username')} className="mb-1 block text-sm font-medium text-gray-700">
-              Identitas Pengguna
+            <label htmlFor={fieldId('email')} className="mb-1 block text-sm font-medium text-gray-700">
+              Email
             </label>
             <div className="relative">
-              <UserRound size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Mail size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
-                id={fieldId('username')}
-                type="text"
+                id={fieldId('email')}
+                type="email"
                 autoComplete="username"
-                value={username}
+                value={email}
                 onChange={(event) => {
-                  setUsername(event.target.value)
-                  setErrors((prev) => ({ ...prev, username: undefined }))
+                  setEmail(event.target.value)
+                  setErrors((prev) => ({ ...prev, email: undefined }))
                   setLoginError(null)
                 }}
-                aria-invalid={Boolean(errors.username)}
-                className={inputClass(Boolean(errors.username))}
+                aria-invalid={Boolean(errors.email)}
+                className={inputClass(Boolean(errors.email))}
               />
             </div>
-            {errors.username && <p className="mt-1 text-xs text-red-600">{errors.username}</p>}
+            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
           </div>
 
           <div>
@@ -126,19 +130,17 @@ function LoginPage() {
 
           <button
             type="submit"
-            className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-900 active:scale-[0.98]"
+            disabled={isSubmitting}
+            className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-teal-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-900 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <LogIn size={18} />
+            {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
             Masuk
           </button>
         </form>
 
-        <div className="mt-5 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
-          <p className="font-medium text-gray-600">Demo akun prototype:</p>
-          <p>Identitas: perawat1 • Kata sandi: perawat123</p>
-        </div>
-
-        <p className="mt-4 text-center text-xs text-gray-400">Prototype — autentikasi simulasi</p>
+        <p className="mt-5 text-center text-xs text-gray-400">
+          Autentikasi menggunakan Supabase Auth. Hubungi admin untuk pembuatan akun.
+        </p>
       </div>
     </div>
   )

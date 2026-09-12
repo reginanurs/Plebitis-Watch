@@ -1,44 +1,60 @@
-import { useCallback } from 'react'
-import usersSeed from '../data/users.json'
-import type { AuthSession } from '../types/auth'
-import type { User } from '../types/user'
-import { useLocalStorageState } from './useLocalStorageState'
+import { useCallback, useEffect, useState } from 'react'
+import { supabase } from '../lib/supabaseClient'
+import type { Profile } from '../types/profile'
 
-const STORAGE_KEY = 'plebitis-watch.auth'
-const users = usersSeed as User[]
-
-/**
- * Front-end login simulation only — checks the submitted credentials
- * against the local demo user list and stores a minimal session flag
- * in localStorage. There is no backend, token, or password hashing
- * involved; this only gates which routes the prototype UI shows.
- */
 export function useAuth() {
-  const [session, setSession] = useLocalStorageState<AuthSession | null>(STORAGE_KEY, null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [currentUser, setCurrentUser] = useState<Profile | undefined>(undefined)
 
-  const currentUser: User | undefined = session
-    ? users.find((candidate) => candidate.id === session.userId)
-    : undefined
+  const loadProfile = useCallback(async (id: string) => {
+    const { data } = await supabase.from('profiles').select('id, name, role').eq('id', id).maybeSingle()
+    setCurrentUser(data ?? undefined)
+  }, [])
 
-  const login = useCallback(
-    (username: string, password: string): boolean => {
-      const matchedUser = users.find(
-        (candidate) => candidate.username === username.trim() && candidate.password === password,
-      )
-      if (!matchedUser) return false
+  useEffect(() => {
+    let isMounted = true
 
-      setSession({ isAuthenticated: true, userId: matchedUser.id, loginAt: new Date().toISOString() })
-      return true
-    },
-    [setSession],
-  )
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return
+      setUserId(session?.user.id)
+      if (session?.user.id) {
+        loadProfile(session.user.id).finally(() => {
+          if (isMounted) setIsLoading(false)
+        })
+      } else {
+        setIsLoading(false)
+      }
+    })
 
-  const logout = useCallback(() => {
-    setSession(null)
-  }, [setSession])
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) return
+      setUserId(session?.user.id)
+      if (session?.user.id) {
+        loadProfile(session.user.id)
+      } else {
+        setCurrentUser(undefined)
+      }
+    })
+
+    return () => {
+      isMounted = false
+      subscription.subscription.unsubscribe()
+    }
+  }, [loadProfile])
+
+  const login = useCallback(async (email: string, password: string): Promise<string | null> => {
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+    return error ? error.message : null
+  }, [])
+
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut()
+  }, [])
 
   return {
-    isAuthenticated: Boolean(session?.isAuthenticated && currentUser),
+    isLoading,
+    isAuthenticated: Boolean(userId),
     currentUser,
     login,
     logout,
