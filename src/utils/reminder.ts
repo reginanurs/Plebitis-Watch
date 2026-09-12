@@ -3,23 +3,23 @@ import type { ReminderIntervalUnit } from '../types/reminderSettings'
 
 const DUE_SOON_WINDOW_MS = 60 * 60 * 1000
 
-function toLocalDateTimeString(date: Date): string {
-  const pad = (value: number) => String(value).padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
-}
-
 /**
  * Adds `intervalMinutes` to a base date/time to produce the next
- * monitoring timestamp. `fromAt` and the result are both local
- * wall-clock datetime strings (no timezone suffix, matching how
- * dates/times are stored elsewhere in this app) — deliberately not
- * round-tripped through `toISOString()`, which would convert to UTC
- * and shift the displayed hour.
+ * monitoring timestamp. `fromAt` is a local wall-clock datetime string
+ * (no timezone suffix) — `new Date(fromAt)` correctly interprets that as
+ * local time per spec. The result is a real UTC ISO string, since this
+ * value is persisted to a Postgres `timestamptz` column: storing a naive
+ * local string there would have Postgres treat it as UTC and silently
+ * shift every reminder by the local UTC offset. `Date` objects (and thus
+ * `getReminderStatus`/`getTimeRemainingLabel`, which just parse this
+ * string back with `new Date(...)`) represent a moment in time
+ * regardless of string format, so this only changes serialization, not
+ * how the value is used.
  */
 export function calculateNextMonitoringAt(fromAt: string, intervalMinutes: number): string {
   const base = new Date(fromAt)
   const next = new Date(base.getTime() + intervalMinutes * 60 * 1000)
-  return toLocalDateTimeString(next)
+  return next.toISOString()
 }
 
 function isSameCalendarDay(a: Date, b: Date): boolean {

@@ -15,13 +15,13 @@ function PivcDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { patients, isLoading: isPatientsLoading } = usePatients()
   const { getPivcById, isLoading: isPivcsLoading } = usePivcs()
-  const { getRemindersByPivcId } = useReminders()
+  const { getRemindersByPivcId, isLoading: isRemindersLoading } = useReminders()
 
   const pivc = id ? getPivcById(id) : undefined
   const patient = pivc ? patients.find((item) => item.id === pivc.patientId) : undefined
   const reminder = pivc ? getRemindersByPivcId(pivc.id).find((item) => item.enabled) : undefined
 
-  if (isPatientsLoading || isPivcsLoading) return <PageLoadingState />
+  if (isPatientsLoading || isPivcsLoading || isRemindersLoading) return <PageLoadingState />
 
   if (!pivc || !patient) {
     return (

@@ -60,6 +60,8 @@ export function useReminderNotificationSync() {
         read: false,
         priority: status === 'overdue' ? 'important' : 'normal',
         actionPath: `/penilaian/${reminder.patientId}`,
+      }).catch((error) => {
+        console.error('Failed to sync reminder notification:', error)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

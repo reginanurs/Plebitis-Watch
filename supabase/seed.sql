@@ -11,6 +11,14 @@
 -- NOT seeded here — those images require a real upload to Supabase Storage,
 -- which plain SQL can't do. The "Dokumentasi Foto" timeline for seed
 -- patients starts empty until new photos are captured through the app.
+--
+-- NOTE: src/data/notifications.json is also deliberately NOT seeded —
+-- useReminderNotificationSync (running in AppLayout) generates matching
+-- notifications live from whatever reminders exist, so seeding both would
+-- just create stale duplicates. The reminders below use `now() +/-
+-- interval` expressions (not the fixed timestamps from reminders.json,
+-- which go stale/overdue the moment real time moves past them) so they
+-- stay believable no matter when this file is actually run.
 
 insert into public.patients (id, medical_record_number, name, date_of_birth, gender, room, bed, address, notes)
 values
@@ -59,4 +67,23 @@ values
   ('assessment-seed-6', 'seed-6', 'pivc-seed-5', '2026-09-05', '18:00', 'Perawat',
    '{"pain":"along_cannula","erythema":"present","swelling":"absent","induration":"present","venousCord":"present","pyrexia":"present"}'::jsonb,
    5, 'Stadium lanjut thrombophlebitis', 'Seluruh tanda stadium lanjut ditemukan bersamaan, termasuk demam. Sesuai rekomendasi, kanula perlu segera dilepas dan pasien dirujuk untuk evaluasi medis lebih lanjut sesuai SOP fasilitas.')
+on conflict (id) do nothing;
+
+insert into public.reminder_settings (
+  id, enabled, default_interval_minutes, interval_unit, source, clinical_status,
+  score_based_intervals, special_therapy_monitoring
+)
+values (
+  true, true, 240, 'hours', 'Prototype demonstration only', 'demo',
+  '{"score0Minutes":480,"score1Minutes":240}'::jsonb,
+  '{"enabled":false,"stageMinutes":[15,30,60],"note":"Prototype / opsional — memerlukan kebijakan fasilitas sebelum diaktifkan. Interval 15/30/60 menit bukan standar klinis universal."}'::jsonb
+)
+on conflict (id) do nothing;
+
+insert into public.reminders (id, patient_id, pivc_id, next_monitoring_at, interval_minutes, enabled, source)
+values
+  ('reminder-seed-1', 'seed-1', 'pivc-seed-1', now() + interval '40 minutes', 240, true, 'Demo prototype'),
+  ('reminder-seed-2', 'seed-8', 'pivc-seed-3', now() - interval '2 hours', 240, true, 'Demo prototype'),
+  ('reminder-seed-3', 'seed-2', 'pivc-seed-4', now() + interval '6 hours', 240, true, 'Demo prototype'),
+  ('reminder-seed-4', 'seed-6', 'pivc-seed-5', now() + interval '1 day', 240, true, 'Demo prototype')
 on conflict (id) do nothing;

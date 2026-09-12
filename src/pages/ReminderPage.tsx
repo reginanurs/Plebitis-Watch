@@ -74,10 +74,15 @@ function ReminderPage() {
   const todayCount = validRows.filter((row) => getReminderStatus(row.reminder.nextMonitoringAt) === 'today').length
   const totalPatientCount = new Set(validRows.map((row) => row.patient.id)).size
 
-  function handleSaveSettings(updated: ReminderSettings) {
-    updateSettings(updated)
-    setIsSettingsOpen(false)
-    setToastMessage('Pengaturan reminder berhasil disimpan.')
+  async function handleSaveSettings(updated: ReminderSettings) {
+    try {
+      await updateSettings(updated)
+      setIsSettingsOpen(false)
+      setToastMessage('Pengaturan reminder berhasil disimpan.')
+    } catch (error) {
+      console.error('Failed to save reminder settings:', error)
+      setToastMessage('Gagal menyimpan pengaturan reminder, coba lagi.')
+    }
   }
 
   return (

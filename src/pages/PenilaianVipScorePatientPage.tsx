@@ -21,18 +21,18 @@ const rules = vipRules as VipRulesConfig
 
 function PenilaianVipScorePatientPage() {
   const { patientId } = useParams<{ patientId: string }>()
-  const { patients, isLoading } = usePatients()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
   const { getActivePivcByPatientId } = usePivcs()
   const { addAssessment } = useAssessments()
   const { addPhoto } = usePhotos()
   const { scheduleNextForPivc } = useReminders()
-  const { settings: reminderSettings } = useReminderSettings()
+  const { settings: reminderSettings, isLoading: isReminderSettingsLoading } = useReminderSettings()
   const navigate = useNavigate()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const patient = patients.find((item) => item.id === patientId)
 
-  if (isLoading) return <PageLoadingState />
+  if (isPatientsLoading || isReminderSettingsLoading) return <PageLoadingState />
 
   if (!patient) {
     return (
@@ -111,7 +111,7 @@ function PenilaianVipScorePatientPage() {
                 : reminderSettings.source
 
           if (intervalMinutes !== null && intervalMinutes !== undefined) {
-            scheduleNextForPivc({
+            await scheduleNextForPivc({
               patientId: patient!.id,
               pivcId: activePivc.id,
               basedOnAssessmentId: newAssessment.id,
