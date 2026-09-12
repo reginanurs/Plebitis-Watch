@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PivcSummary from '../components/pivc/PivcSummary'
 import ReminderStatusBadge from '../components/reminders/ReminderStatusBadge'
@@ -12,13 +13,15 @@ import { getReminderStatus, getTimeRemainingLabel } from '../utils/reminder'
 
 function PivcDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { patients } = usePatients()
-  const { getPivcById } = usePivcs()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
+  const { getPivcById, isLoading: isPivcsLoading } = usePivcs()
   const { getRemindersByPivcId } = useReminders()
 
   const pivc = id ? getPivcById(id) : undefined
   const patient = pivc ? patients.find((item) => item.id === pivc.patientId) : undefined
   const reminder = pivc ? getRemindersByPivcId(pivc.id).find((item) => item.enabled) : undefined
+
+  if (isPatientsLoading || isPivcsLoading) return <PageLoadingState />
 
   if (!pivc || !patient) {
     return (

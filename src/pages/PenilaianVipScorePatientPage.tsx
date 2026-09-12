@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PivcContextSummary from '../components/pivc/PivcContextSummary'
 import Toast from '../components/Toast'
@@ -20,7 +21,7 @@ const rules = vipRules as VipRulesConfig
 
 function PenilaianVipScorePatientPage() {
   const { patientId } = useParams<{ patientId: string }>()
-  const { patients } = usePatients()
+  const { patients, isLoading } = usePatients()
   const { getActivePivcByPatientId } = usePivcs()
   const { addAssessment } = useAssessments()
   const { addPhoto } = usePhotos()
@@ -30,6 +31,8 @@ function PenilaianVipScorePatientPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const patient = patients.find((item) => item.id === patientId)
+
+  if (isLoading) return <PageLoadingState />
 
   if (!patient) {
     return (

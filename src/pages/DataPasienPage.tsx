@@ -47,22 +47,32 @@ function DataPasienPage() {
     setFormState(null)
   }
 
-  function handleSave(input: PatientInput) {
-    if (formState?.mode === 'edit') {
-      updatePatient({ ...input, id: formState.patient.id })
-      setToastMessage('Data pasien berhasil diperbarui.')
-    } else {
-      addPatient(input)
-      setToastMessage('Pasien baru berhasil ditambahkan.')
+  async function handleSave(input: PatientInput) {
+    try {
+      if (formState?.mode === 'edit') {
+        await updatePatient({ ...input, id: formState.patient.id })
+        setToastMessage('Data pasien berhasil diperbarui.')
+      } else {
+        await addPatient(input)
+        setToastMessage('Pasien baru berhasil ditambahkan.')
+      }
+      setFormState(null)
+    } catch (error) {
+      console.error('Failed to save patient:', error)
+      setToastMessage('Gagal menyimpan data pasien, coba lagi.')
     }
-    setFormState(null)
   }
 
-  function handleConfirmDelete() {
+  async function handleConfirmDelete() {
     if (!deleteTarget) return
-    deletePatient(deleteTarget.id)
-    setToastMessage('Data pasien berhasil dihapus.')
-    setDeleteTarget(null)
+    try {
+      await deletePatient(deleteTarget.id)
+      setToastMessage('Data pasien berhasil dihapus.')
+      setDeleteTarget(null)
+    } catch (error) {
+      console.error('Failed to delete patient:', error)
+      setToastMessage('Gagal menghapus data pasien, coba lagi.')
+    }
   }
 
   return (

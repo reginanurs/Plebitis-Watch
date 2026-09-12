@@ -1,6 +1,7 @@
 import { Camera, ClipboardList, LineChart } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PivcStatusBadge from '../components/pivc/PivcStatusBadge'
 import { useAssessments } from '../hooks/useAssessments'
@@ -42,12 +43,14 @@ function SummaryCard({
 
 function PatientDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { patients } = usePatients()
+  const { patients, isLoading } = usePatients()
   const { getActivePivcByPatientId } = usePivcs()
   const { getAssessmentsByPatientId } = useAssessments()
   const { getPhotosByPatientId } = usePhotos()
   const patient = patients.find((item) => item.id === id)
   const activePivc = patient ? getActivePivcByPatientId(patient.id) : undefined
+
+  if (isLoading) return <PageLoadingState />
 
   if (!patient) {
     return (

@@ -2,6 +2,7 @@ import { Camera, ImageIcon, ZoomIn } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PhotoDetailModal from '../components/photos/PhotoDetailModal'
 import PhotoForm, { type PhotoFormValues } from '../components/photos/PhotoForm'
@@ -73,7 +74,7 @@ function TimelineCard({ entry, dayLabel, onViewDetail }: { entry: TimelineEntry;
 
 function DokumentasiFotoPatientPage() {
   const { patientId } = useParams<{ patientId: string }>()
-  const { patients } = usePatients()
+  const { patients, isLoading } = usePatients()
   const { getActivePivcByPatientId } = usePivcs()
   const { getAssessmentsByPivcId } = useAssessments()
   const { addPhoto, getPhotosByPivcId } = usePhotos()
@@ -122,6 +123,8 @@ function DokumentasiFotoPatientPage() {
     }
     return entries.sort((a, b) => `${b.date}${b.time}`.localeCompare(`${a.date}${a.time}`))
   }, [activePivc, initialPhotoUrl, photosForPivc])
+
+  if (isLoading) return <PageLoadingState />
 
   if (!patient) {
     return (

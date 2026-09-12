@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import DetailField from '../components/DetailField'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PhotoDetailModal from '../components/photos/PhotoDetailModal'
 import PivcContextSummary from '../components/pivc/PivcContextSummary'
@@ -31,8 +32,8 @@ function resolveCategoryColorClass(categoryLabel: string | null): string {
 function HasilPenilaianResultPage() {
   const { assessmentId } = useParams<{ assessmentId: string }>()
   const { getAssessmentById } = useAssessments()
-  const { patients } = usePatients()
-  const { getPivcById } = usePivcs()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
+  const { getPivcById, isLoading: isPivcsLoading } = usePivcs()
   const { getPhotosByAssessmentId } = usePhotos()
   const navigate = useNavigate()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
@@ -56,6 +57,8 @@ function HasilPenilaianResultPage() {
       </div>
     )
   }
+
+  if (isPatientsLoading || isPivcsLoading) return <PageLoadingState />
 
   const patient = patients.find((item) => item.id === assessment.patientId)
 

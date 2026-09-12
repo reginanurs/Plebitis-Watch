@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ConfirmDialog from '../components/ConfirmDialog'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PivcForm, { type PivcFormValues } from '../components/pivc/PivcForm'
 import PivcStatusBadge from '../components/pivc/PivcStatusBadge'
@@ -14,7 +15,7 @@ import { formatDateID } from '../utils/patient'
 
 function PivcPatientPage() {
   const { patientId } = useParams<{ patientId: string }>()
-  const { patients } = usePatients()
+  const { patients, isLoading } = usePatients()
   const { addPivc, updatePivc, markAsRemoved, getActivePivcByPatientId, getPivcsByPatientId } = usePivcs()
   const navigate = useNavigate()
 
@@ -23,6 +24,8 @@ function PivcPatientPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const patient = patients.find((item) => item.id === patientId)
+
+  if (isLoading) return <PageLoadingState />
 
   if (!patient) {
     return (
@@ -42,23 +45,38 @@ function PivcPatientPage() {
   const history = getPivcsByPatientId(patient.id).filter((pivc) => pivc.status === 'removed')
   const showForm = !activePivc || isEditingActive
 
-  function handleCreate(values: PivcFormValues) {
-    addPivc({ ...values, patientId: patient!.id })
-    setToastMessage('Data pemasangan PIVC berhasil disimpan.')
+  async function handleCreate(values: PivcFormValues) {
+    try {
+      await addPivc({ ...values, patientId: patient!.id })
+      setToastMessage('Data pemasangan PIVC berhasil disimpan.')
+    } catch (error) {
+      console.error('Failed to save PIVC:', error)
+      setToastMessage('Gagal menyimpan data PIVC, coba lagi.')
+    }
   }
 
-  function handleUpdate(values: PivcFormValues) {
+  async function handleUpdate(values: PivcFormValues) {
     if (!activePivc) return
-    updatePivc({ ...activePivc, ...values })
-    setToastMessage('Data pemasangan PIVC berhasil diperbarui.')
-    setIsEditingActive(false)
+    try {
+      await updatePivc({ ...activePivc, ...values })
+      setToastMessage('Data pemasangan PIVC berhasil diperbarui.')
+      setIsEditingActive(false)
+    } catch (error) {
+      console.error('Failed to update PIVC:', error)
+      setToastMessage('Gagal memperbarui data PIVC, coba lagi.')
+    }
   }
 
-  function handleConfirmRemove() {
+  async function handleConfirmRemove() {
     if (!activePivc) return
-    markAsRemoved(activePivc.id)
-    setToastMessage('PIVC ditandai sebagai dilepas.')
-    setConfirmRemoveOpen(false)
+    try {
+      await markAsRemoved(activePivc.id)
+      setToastMessage('PIVC ditandai sebagai dilepas.')
+      setConfirmRemoveOpen(false)
+    } catch (error) {
+      console.error('Failed to mark PIVC as removed:', error)
+      setToastMessage('Gagal menandai PIVC sebagai dilepas, coba lagi.')
+    }
   }
 
   return (

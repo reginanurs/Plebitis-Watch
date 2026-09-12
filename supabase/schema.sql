@@ -1,10 +1,19 @@
--- Plebitis Watch — Supabase schema (Phase 20: Fondasi Supabase)
+-- Plebitis Watch — Supabase schema
 --
--- Scope of this phase: authentication only. The tables below are created as
--- forward-looking foundation for later phases (21+) that migrate each
--- localStorage-backed hook (usePatients, usePivcs, useAssessments, ...) to
--- Supabase one at a time. The running app does NOT read/write these tables
--- yet, except `profiles`, which backs real login.
+-- Phase 20 added `profiles` (real login). Phase 21 migrates `patients` and
+-- `pivcs` to real read/write. The rest of the clinical tables
+-- (assessments, photos, reminders, notifications, reminder_settings) exist
+-- as forward-looking foundation for later phases and are NOT read/written
+-- by the app yet.
+--
+-- ID FORMAT: every id below is `text`, not `uuid`. This is deliberate —
+-- `assessments.json`/`photos.json`/`reminders.json`/`notifications.json`
+-- (still localStorage-only) hardcode plain-string ids like "seed-1" and
+-- "pivc-seed-3" to cross-reference patients/pivcs. Once patients/pivcs live
+-- in Supabase, their ids must stay in that exact string format so those
+-- still-local files keep resolving correctly during the transition. New
+-- rows created through the app use `crypto.randomUUID()` client-side, which
+-- is valid text too.
 --
 -- RLS assumption: this is a small, single-tenant clinical-team prototype,
 -- not a multi-tenant SaaS. Every table below uses a single policy family:
@@ -12,7 +21,11 @@
 -- per-row ownership model. Revisit this if the app ever needs to restrict
 -- data access between different care teams/facilities.
 --
--- Run this whole file once in the Supabase Dashboard → SQL Editor.
+-- This file is safe to re-run: `profiles` (has real auth data) is never
+-- dropped; every other table is dropped and recreated each run.
+--
+-- Run this whole file once in the Supabase Dashboard → SQL Editor, then
+-- run seed.sql to populate patients/pivcs with the existing demo data.
 
 -- ============================================================================
 -- profiles — mirrors auth.users, adds display name + role used by the UI
@@ -65,11 +78,25 @@ create trigger on_auth_user_created
   for each row execute function public.handle_new_user();
 
 -- ============================================================================
+-- Clinical-data tables — drop and recreate every run (see file header).
+-- Drop order follows FK dependency (children before parents); cascade
+-- covers anything missed.
+-- ============================================================================
+
+drop table if exists public.notifications cascade;
+drop table if exists public.reminders cascade;
+drop table if exists public.photos cascade;
+drop table if exists public.assessments cascade;
+drop table if exists public.pivcs cascade;
+drop table if exists public.patients cascade;
+drop table if exists public.reminder_settings cascade;
+
+-- ============================================================================
 -- patients
 -- ============================================================================
 
-create table if not exists public.patients (
-  id uuid primary key default gen_random_uuid(),
+create table public.patients (
+  id text primary key default gen_random_uuid()::text,
   medical_record_number text not null,
   name text not null,
   date_of_birth date not null,
@@ -86,9 +113,9 @@ create table if not exists public.patients (
 -- pivcs
 -- ============================================================================
 
-create table if not exists public.pivcs (
-  id uuid primary key default gen_random_uuid(),
-  patient_id uuid not null references public.patients (id) on delete cascade,
+create table public.pivcs (
+  id text primary key default gen_random_uuid()::text,
+  patient_id text not null references public.patients (id) on delete cascade,
   installation_date date not null,
   installation_time text not null,
   insertion_site text not null,
@@ -98,7 +125,7 @@ create table if not exists public.pivcs (
   inserted_by text,
   purpose text,
   additional_notes text,
-  initial_photo_id uuid,
+  initial_photo_id text,
   status text not null check (status in ('active', 'removed')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -108,10 +135,10 @@ create table if not exists public.pivcs (
 -- assessments
 -- ============================================================================
 
-create table if not exists public.assessments (
-  id uuid primary key default gen_random_uuid(),
-  patient_id uuid not null references public.patients (id) on delete cascade,
-  pivc_id uuid not null references public.pivcs (id) on delete cascade,
+create table public.assessments (
+  id text primary key default gen_random_uuid()::text,
+  patient_id text not null references public.patients (id) on delete cascade,
+  pivc_id text not null references public.pivcs (id) on delete cascade,
   date date not null,
   time text not null,
   assessed_by text not null,
@@ -119,7 +146,7 @@ create table if not exists public.assessments (
   total_score integer,
   category text,
   notes text,
-  photo_id uuid,
+  photo_id text,
   created_at timestamptz not null default now()
 );
 
@@ -127,11 +154,11 @@ create table if not exists public.assessments (
 -- photos
 -- ============================================================================
 
-create table if not exists public.photos (
-  id uuid primary key default gen_random_uuid(),
-  patient_id uuid not null references public.patients (id) on delete cascade,
-  pivc_id uuid not null references public.pivcs (id) on delete cascade,
-  assessment_id uuid references public.assessments (id) on delete set null,
+create table public.photos (
+  id text primary key default gen_random_uuid()::text,
+  patient_id text not null references public.patients (id) on delete cascade,
+  pivc_id text not null references public.pivcs (id) on delete cascade,
+  assessment_id text references public.assessments (id) on delete set null,
   storage_path text not null,
   date date not null,
   time text not null,
@@ -143,34 +170,26 @@ create table if not exists public.photos (
   created_at timestamptz not null default now()
 );
 
-do $$
-begin
-  if not exists (
-    select 1 from pg_constraint where conname = 'pivcs_initial_photo_id_fkey'
-  ) then
-    alter table public.pivcs
-      add constraint pivcs_initial_photo_id_fkey
-      foreign key (initial_photo_id) references public.photos (id) on delete set null;
-  end if;
+-- NOTE: pivcs.initial_photo_id is intentionally NOT a foreign key to
+-- public.photos. PivcForm currently saves this photo via photoStorage.ts
+-- (a raw browser-localStorage dataURL map, not the `photos` table), so it
+-- never corresponds to a real `photos` row — an FK here would reject every
+-- PIVC save that includes a photo. Revisit once Phase 22 migrates photo
+-- capture to Supabase Storage + the `photos` table for real.
 
-  if not exists (
-    select 1 from pg_constraint where conname = 'assessments_photo_id_fkey'
-  ) then
-    alter table public.assessments
-      add constraint assessments_photo_id_fkey
-      foreign key (photo_id) references public.photos (id) on delete set null;
-  end if;
-end $$;
+alter table public.assessments
+  add constraint assessments_photo_id_fkey
+  foreign key (photo_id) references public.photos (id) on delete set null;
 
 -- ============================================================================
 -- reminders
 -- ============================================================================
 
-create table if not exists public.reminders (
-  id uuid primary key default gen_random_uuid(),
-  patient_id uuid not null references public.patients (id) on delete cascade,
-  pivc_id uuid not null references public.pivcs (id) on delete cascade,
-  based_on_assessment_id uuid references public.assessments (id) on delete set null,
+create table public.reminders (
+  id text primary key default gen_random_uuid()::text,
+  patient_id text not null references public.patients (id) on delete cascade,
+  pivc_id text not null references public.pivcs (id) on delete cascade,
+  based_on_assessment_id text references public.assessments (id) on delete set null,
   next_monitoring_at timestamptz not null,
   interval_minutes integer not null,
   enabled boolean not null default true,
@@ -184,14 +203,14 @@ create table if not exists public.reminders (
 -- notifications
 -- ============================================================================
 
-create table if not exists public.notifications (
+create table public.notifications (
   id text primary key,
   type text not null check (type in ('monitoring_reminder', 'system')),
   title text not null,
   message text not null,
-  patient_id uuid references public.patients (id) on delete cascade,
-  pivc_id uuid references public.pivcs (id) on delete cascade,
-  reminder_id uuid references public.reminders (id) on delete cascade,
+  patient_id text references public.patients (id) on delete cascade,
+  pivc_id text references public.pivcs (id) on delete cascade,
+  reminder_id text references public.reminders (id) on delete cascade,
   created_at timestamptz not null default now(),
   read boolean not null default false,
   priority text not null check (priority in ('normal', 'important')),
@@ -202,7 +221,7 @@ create table if not exists public.notifications (
 -- reminder_settings — single global settings row (facility-wide, not per-user)
 -- ============================================================================
 
-create table if not exists public.reminder_settings (
+create table public.reminder_settings (
   id boolean primary key default true check (id),
   enabled boolean not null default true,
   default_interval_minutes integer,
