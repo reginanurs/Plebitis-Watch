@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NotificationList from '../components/notifications/NotificationList'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import { usePatients } from '../hooks/usePatients'
 import { useNotifications } from '../hooks/useNotifications'
 import type { Notification } from '../types/notification'
@@ -17,8 +18,8 @@ const FILTER_OPTIONS: { value: FilterKey; label: string }[] = [
 ]
 
 function NotifikasiPage() {
-  const { patients } = usePatients()
-  const { notifications, markAsRead, markAllAsRead } = useNotifications()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
+  const { notifications, markAsRead, markAllAsRead, isLoading: isNotificationsLoading } = useNotifications()
   const navigate = useNavigate()
   const [filter, setFilter] = useState<FilterKey>('all')
 
@@ -46,9 +47,11 @@ function NotifikasiPage() {
   const unreadCount = notifications.filter((notification) => !notification.read).length
 
   function handleOpen(notification: Notification) {
-    markAsRead(notification.id)
+    markAsRead(notification.id).catch((error) => console.error('Failed to mark notification as read:', error))
     if (notification.actionPath) navigate(notification.actionPath)
   }
+
+  if (isPatientsLoading || isNotificationsLoading) return <PageLoadingState />
 
   return (
     <div>
@@ -65,7 +68,7 @@ function NotifikasiPage() {
           {unreadCount > 0 && (
             <button
               type="button"
-              onClick={markAllAsRead}
+              onClick={() => markAllAsRead().catch((error) => console.error('Failed to mark all as read:', error))}
               className="self-start rounded-lg border border-teal-700 px-4 py-2 text-sm font-medium text-teal-800 hover:bg-teal-50 sm:self-auto"
             >
               Tandai Semua Sudah Dibaca

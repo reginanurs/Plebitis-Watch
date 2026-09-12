@@ -1,6 +1,7 @@
 import { AlertTriangle, CalendarCheck, Clock, Settings2, Users } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientSearchInput from '../components/patients/PatientSearchInput'
 import ReminderDetailModal from '../components/reminders/ReminderDetailModal'
 import ReminderSettingsDialog from '../components/reminders/ReminderSettingsDialog'
@@ -28,10 +29,10 @@ function currentIntervalLabel(settings: ReminderSettings): string {
 }
 
 function ReminderPage() {
-  const { patients } = usePatients()
-  const { getPivcById } = usePivcs()
-  const { reminders } = useReminders()
-  const { settings, updateSettings } = useReminderSettings()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
+  const { getPivcById, isLoading: isPivcsLoading } = usePivcs()
+  const { reminders, isLoading: isRemindersLoading } = useReminders()
+  const { settings, updateSettings, isLoading: isSettingsLoading } = useReminderSettings()
 
   const [searchTerm, setSearchTerm] = useState('')
   const [roomFilter, setRoomFilter] = useState('')
@@ -84,6 +85,8 @@ function ReminderPage() {
       setToastMessage('Gagal menyimpan pengaturan reminder, coba lagi.')
     }
   }
+
+  if (isPatientsLoading || isPivcsLoading || isRemindersLoading || isSettingsLoading) return <PageLoadingState />
 
   return (
     <div>

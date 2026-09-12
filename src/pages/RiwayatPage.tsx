@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import MonitoringHistoryTable from '../components/history/MonitoringHistoryTable'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientSearchInput from '../components/patients/PatientSearchInput'
 import { useAssessments } from '../hooks/useAssessments'
 import { usePatients } from '../hooks/usePatients'
@@ -23,8 +24,8 @@ const PERIOD_OPTIONS: { value: PeriodFilter; label: string }[] = [
 ]
 
 function RiwayatPage() {
-  const { assessments } = useAssessments()
-  const { patients } = usePatients()
+  const { assessments, isLoading: isAssessmentsLoading } = useAssessments()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
   const { getPivcById } = usePivcs()
   const { getPhotosByAssessmentId } = usePhotos()
   const navigate = useNavigate()
@@ -127,6 +128,8 @@ function RiwayatPage() {
   function todayForFilename() {
     return new Date().toISOString().slice(0, 10)
   }
+
+  if (isAssessmentsLoading || isPatientsLoading) return <PageLoadingState />
 
   return (
     <div>

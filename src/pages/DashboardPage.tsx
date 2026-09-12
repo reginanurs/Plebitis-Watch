@@ -24,6 +24,7 @@ import {
   type TooltipContentProps,
 } from 'recharts'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PivcStatusBadge from '../components/pivc/PivcStatusBadge'
 import ReminderStatusBadge from '../components/reminders/ReminderStatusBadge'
 import vipRulesData from '../data/vipRules.json'
@@ -112,12 +113,12 @@ function EmptySection({ text }: { text: string }) {
 function DashboardPage() {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
-  const { patients } = usePatients()
-  const { pivcs, getPivcById } = usePivcs()
-  const { assessments } = useAssessments()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
+  const { pivcs, getPivcById, isLoading: isPivcsLoading } = usePivcs()
+  const { assessments, isLoading: isAssessmentsLoading } = useAssessments()
   const { getPhotosByAssessmentId } = usePhotos()
-  const { reminders } = useReminders()
-  const { notifications } = useNotifications()
+  const { reminders, isLoading: isRemindersLoading } = useReminders()
+  const { notifications, isLoading: isNotificationsLoading } = useNotifications()
 
   const activePivcCount = useMemo(() => pivcs.filter((pivc) => pivc.status === 'active').length, [pivcs])
 
@@ -187,6 +188,10 @@ function DashboardPage() {
   )
 
   const recentPatients = useMemo(() => patients.slice(0, RECENT_PATIENTS_LIMIT), [patients])
+
+  if (isPatientsLoading || isPivcsLoading || isAssessmentsLoading || isRemindersLoading || isNotificationsLoading) {
+    return <PageLoadingState />
+  }
 
   return (
     <div>

@@ -1,6 +1,6 @@
 # PLEBITIS WATCH
 
-Plebitis Watch is a front-end-only prototype for a digital nursing application. It is designed to demonstrate and simulate:
+Plebitis Watch is a front-end application, backed by Supabase, for a digital nursing prototype. It is designed to demonstrate and simulate:
 
 - Patient management
 - Peripheral Intravenous Catheter (PIVC) monitoring
@@ -13,7 +13,7 @@ Plebitis Watch is a front-end-only prototype for a digital nursing application. 
 - Education
 - Real authentication via Supabase Auth
 
-This is a **prototype for demonstration and simulation purposes only**. It is not a certified medical device and must not be used for real clinical decision-making. As of Phase 20, authentication is backed by a real Supabase project; clinical/patient data still lives in local mock JSON + `localStorage` and will be migrated to Supabase in later phases.
+This is a **prototype for demonstration and simulation purposes only**. It is not a certified medical device and must not be used for real clinical decision-making. All clinical/operational data (patients, PIVCs, assessments, photos, reminders, notifications, reminder settings) and authentication are backed by a real Supabase project — see Status below.
 
 ## Tech Stack
 
@@ -24,7 +24,7 @@ This is a **prototype for demonstration and simulation purposes only**. It is no
 - React Router
 - Lucide React (icons)
 - Recharts (charts)
-- Supabase (Auth — clinical data migration in progress, see Status below)
+- Supabase (Auth, Postgres, Storage)
 
 ## Project Structure
 
@@ -33,7 +33,7 @@ src/
 ├── components/   # Reusable UI components
 ├── pages/        # Route-level page components
 ├── layouts/      # Shared page layouts
-├── data/         # Local mock/seed data (JSON)
+├── data/         # Static app config (VIP rules, recommendations, education, default reminder settings)
 ├── hooks/        # Custom React hooks
 ├── utils/        # Helper functions
 ├── types/        # Shared TypeScript types
@@ -44,11 +44,12 @@ src/
 
 ## Supabase Setup
 
-Authentication requires a Supabase project.
+The app requires a Supabase project — it is the only backend, for both authentication and all clinical/operational data.
 
 1. Copy `.env.example` to `.env` and fill in your project's URL and publishable/anon key (from Supabase Dashboard → Project Settings → API).
-2. Run [`supabase/schema.sql`](supabase/schema.sql) once in Supabase Dashboard → SQL Editor. It creates the `profiles` table (used for login) plus all clinical-data tables as forward-looking foundation for later migration phases, with Row Level Security enabled.
-3. Create demo users manually in Dashboard → Authentication → Users → Add user, with **Auto Confirm User** enabled and User Metadata such as:
+2. Run [`supabase/schema.sql`](supabase/schema.sql) once in Supabase Dashboard → SQL Editor. It creates the `profiles` table (used for login), every clinical-data table (patients, pivcs, assessments, photos, reminders, notifications, reminder_settings), and a private `photos` Storage bucket — all with Row Level Security enabled.
+3. Run [`supabase/seed.sql`](supabase/seed.sql) afterward to populate demo patients/PIVCs/assessments/reminders (matching the app's original mock data). Demo insertion-site photos are not included — those require a real Storage upload, so the "Dokumentasi Foto" timeline starts empty for seed patients until new photos are captured through the app.
+4. Create demo users manually in Dashboard → Authentication → Users → Add user, with **Auto Confirm User** enabled and User Metadata such as:
    ```json
    { "name": "Perawat Demo", "role": "Perawat" }
    ```
@@ -100,4 +101,4 @@ This is a prototype. It is **not** a certified medical device or a replacement f
 
 ## Status
 
-Authentication is real, backed by Supabase Auth. Clinical/operational data (patients, PIVCs, assessments, photos, reminders, notifications) is still simulated locally using mock JSON seed data and browser `localStorage`; migrating each of these to Supabase is planned for later phases.
+Authentication and all clinical/operational data (patients, PIVCs, assessments, photos, reminders, notifications, reminder settings) are backed by Supabase — Postgres (with Row Level Security), Storage for photos, and Supabase Auth. `src/data/*.json` now holds only static app configuration (VIP Score rules, recommendations, education content, default reminder settings), not patient/clinical records. There is no `localStorage`-based persistence left in the app.

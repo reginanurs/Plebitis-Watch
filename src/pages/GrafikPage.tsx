@@ -14,6 +14,7 @@ import {
 } from 'recharts'
 import MonitoringHistoryTable, { type MonitoringHistoryRow } from '../components/history/MonitoringHistoryTable'
 import PageHeader from '../components/PageHeader'
+import PageLoadingState from '../components/PageLoadingState'
 import PatientContextCard from '../components/PatientContextCard'
 import PatientPicker from '../components/patients/PatientPicker'
 import PatientSearchInput from '../components/patients/PatientSearchInput'
@@ -64,8 +65,8 @@ function ChartTooltip({ active, payload }: TooltipContentProps) {
 }
 
 function GrafikPage() {
-  const { assessments } = useAssessments()
-  const { patients } = usePatients()
+  const { assessments, isLoading: isAssessmentsLoading } = useAssessments()
+  const { patients, isLoading: isPatientsLoading } = usePatients()
   const { getActivePivcByPatientId, getPivcsByPatientId, getPivcById } = usePivcs()
   const { getPhotosByAssessmentId } = usePhotos()
   const navigate = useNavigate()
@@ -171,6 +172,8 @@ function GrafikPage() {
     setPivcFilter('')
     setPeriodFilter('all')
   }
+
+  if (isPatientsLoading || isAssessmentsLoading) return <PageLoadingState />
 
   if (!selectedPatient) {
     return (

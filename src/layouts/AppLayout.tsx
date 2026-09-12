@@ -55,8 +55,12 @@ function AppLayout() {
   const unreadCount = notifications.filter((notification) => !notification.read).length
 
   function handleNotificationClick(notification: Notification) {
-    markAsRead(notification.id)
+    markAsRead(notification.id).catch((error) => console.error('Failed to mark notification as read:', error))
     if (notification.actionPath) navigate(notification.actionPath)
+  }
+
+  function handleMarkAllNotificationsAsRead() {
+    markAllAsRead().catch((error) => console.error('Failed to mark all as read:', error))
   }
 
   return (
@@ -66,7 +70,7 @@ function AppLayout() {
         notificationCount={unreadCount}
         recentNotifications={recentNotifications}
         onNotificationClick={handleNotificationClick}
-        onMarkAllNotificationsAsRead={markAllAsRead}
+        onMarkAllNotificationsAsRead={handleMarkAllNotificationsAsRead}
         onViewAllNotifications={() => navigate('/notifikasi')}
         userName={currentUser?.name}
         userRole={currentUser?.role}
