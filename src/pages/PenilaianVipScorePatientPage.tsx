@@ -50,84 +50,89 @@ function PenilaianVipScorePatientPage() {
 
   const activePivc = getActivePivcByPatientId(patient.id)
 
-  function handleSave(values: AssessmentFormValues, scoreResult: VipScoreResult) {
+  async function handleSave(values: AssessmentFormValues, scoreResult: VipScoreResult) {
     if (!activePivc) return
     const totalScore = scoreResult.status === 'ok' ? scoreResult.totalScore : null
 
-    const newAssessment = addAssessment({
-      patientId: patient!.id,
-      pivcId: activePivc.id,
-      date: values.date,
-      time: values.time,
-      assessedBy: values.assessedBy,
-      components: values.components,
-      totalScore,
-      category: scoreResult.status === 'ok' ? scoreResult.category : null,
-      notes: values.notes,
-    })
-
-    // The photo (if captured via the "Tambah Foto" shortcut) can only be
-    // permanently linked once the assessment exists and has a real id.
-    let photoSaved = false
-    if (values.photoImageData) {
-      addPhoto({
+    try {
+      const newAssessment = await addAssessment({
         patientId: patient!.id,
         pivcId: activePivc.id,
-        assessmentId: newAssessment.id,
-        imageData: values.photoImageData,
         date: values.date,
         time: values.time,
-        insertionSite: activePivc.insertionSite,
-        vipScore: totalScore,
-        vipCategory: scoreResult.status === 'ok' ? scoreResult.category : null,
-        createdBy: values.assessedBy,
+        assessedBy: values.assessedBy,
+        components: values.components,
+        totalScore,
+        category: scoreResult.status === 'ok' ? scoreResult.category : null,
+        notes: values.notes,
       })
-      photoSaved = true
-    }
 
-    // VIP-Score-aware monitoring interval: score 0/1 reschedule the routine
-    // reminder using the configured prototype intervals; score >= 2 does
-    // NOT auto-schedule routine monitoring — the recommendation shown on
-    // the result becomes the primary next step instead. Falls back to the
-    // existing flat default when the score itself is unavailable.
-    if (reminderSettings.enabled) {
-      const scoreIntervalMinutes =
-        totalScore === 0
-          ? reminderSettings.scoreBasedIntervals?.score0Minutes
-          : totalScore === 1
-            ? reminderSettings.scoreBasedIntervals?.score1Minutes
-            : undefined
+      // The photo (if captured via the "Tambah Foto" shortcut) can only be
+      // permanently linked once the assessment exists and has a real id.
+      let photoSaved = false
+      if (values.photoImageData) {
+        await addPhoto({
+          patientId: patient!.id,
+          pivcId: activePivc.id,
+          assessmentId: newAssessment.id,
+          imageData: values.photoImageData,
+          date: values.date,
+          time: values.time,
+          insertionSite: activePivc.insertionSite,
+          vipScore: totalScore,
+          vipCategory: scoreResult.status === 'ok' ? scoreResult.category : null,
+          createdBy: values.assessedBy,
+        })
+        photoSaved = true
+      }
 
-      const shouldSkipRoutineReminder = totalScore !== null && totalScore >= 2
-
-      if (!shouldSkipRoutineReminder) {
-        const intervalMinutes = scoreIntervalMinutes ?? reminderSettings.defaultIntervalMinutes
-        const source =
+      // VIP-Score-aware monitoring interval: score 0/1 reschedule the routine
+      // reminder using the configured prototype intervals; score >= 2 does
+      // NOT auto-schedule routine monitoring — the recommendation shown on
+      // the result becomes the primary next step instead. Falls back to the
+      // existing flat default when the score itself is unavailable.
+      if (reminderSettings.enabled) {
+        const scoreIntervalMinutes =
           totalScore === 0
-            ? 'Prototype — interval per shift berdasarkan VIP Score 0'
+            ? reminderSettings.scoreBasedIntervals?.score0Minutes
             : totalScore === 1
-              ? 'Prototype — interval 4 jam berdasarkan VIP Score 1'
-              : reminderSettings.source
+              ? reminderSettings.scoreBasedIntervals?.score1Minutes
+              : undefined
 
-        if (intervalMinutes !== null && intervalMinutes !== undefined) {
-          scheduleNextForPivc({
-            patientId: patient!.id,
-            pivcId: activePivc.id,
-            basedOnAssessmentId: newAssessment.id,
-            fromAt: `${values.date}T${values.time}:00`,
-            intervalMinutes,
-            source,
-            triggerType: 'vip_score',
-          })
+        const shouldSkipRoutineReminder = totalScore !== null && totalScore >= 2
+
+        if (!shouldSkipRoutineReminder) {
+          const intervalMinutes = scoreIntervalMinutes ?? reminderSettings.defaultIntervalMinutes
+          const source =
+            totalScore === 0
+              ? 'Prototype — interval per shift berdasarkan VIP Score 0'
+              : totalScore === 1
+                ? 'Prototype — interval 4 jam berdasarkan VIP Score 1'
+                : reminderSettings.source
+
+          if (intervalMinutes !== null && intervalMinutes !== undefined) {
+            scheduleNextForPivc({
+              patientId: patient!.id,
+              pivcId: activePivc.id,
+              basedOnAssessmentId: newAssessment.id,
+              fromAt: `${values.date}T${values.time}:00`,
+              intervalMinutes,
+              source,
+              triggerType: 'vip_score',
+            })
+          }
         }
       }
-    }
 
-    const assessmentMessage =
-      scoreResult.status === 'ok'
-        ? 'Penilaian VIP Score berhasil disimpan.'
-        : 'Data observasi berhasil disimpan. Skor belum dapat dihitung karena masih ada komponen yang belum dipilih.'
-    setToastMessage(photoSaved ? `${assessmentMessage} Foto monitoring turut disimpan.` : assessmentMessage)
+      const assessmentMessage =
+        scoreResult.status === 'ok'
+          ? 'Penilaian VIP Score berhasil disimpan.'
+          : 'Data observasi berhasil disimpan. Skor belum dapat dihitung karena masih ada komponen yang belum dipilih.'
+      setToastMessage(photoSaved ? `${assessmentMessage} Foto monitoring turut disimpan.` : assessmentMessage)
+    } catch (error) {
+      console.error('Failed to save assessment:', error)
+      setToastMessage('Gagal menyimpan penilaian, coba lagi.')
+    }
   }
 
   return (

@@ -254,3 +254,18 @@ begin
     );
   end loop;
 end $$;
+
+-- ============================================================================
+-- Storage — private bucket for insertion-site photos (Phase 22)
+-- ============================================================================
+
+insert into storage.buckets (id, name, public)
+values ('photos', 'photos', false)
+on conflict (id) do nothing;
+
+drop policy if exists "Authenticated full access to photos" on storage.objects;
+create policy "Authenticated full access to photos"
+  on storage.objects for all
+  to authenticated
+  using (bucket_id = 'photos')
+  with check (bucket_id = 'photos');

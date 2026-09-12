@@ -31,13 +31,15 @@ function resolveCategoryColorClass(categoryLabel: string | null): string {
 
 function HasilPenilaianResultPage() {
   const { assessmentId } = useParams<{ assessmentId: string }>()
-  const { getAssessmentById } = useAssessments()
+  const { getAssessmentById, isLoading: isAssessmentsLoading } = useAssessments()
   const { patients, isLoading: isPatientsLoading } = usePatients()
   const { getPivcById, isLoading: isPivcsLoading } = usePivcs()
   const { getPhotosByAssessmentId } = usePhotos()
   const navigate = useNavigate()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
+
+  if (isAssessmentsLoading || isPatientsLoading || isPivcsLoading) return <PageLoadingState />
 
   const assessment = assessmentId ? getAssessmentById(assessmentId) : undefined
 
@@ -57,8 +59,6 @@ function HasilPenilaianResultPage() {
       </div>
     )
   }
-
-  if (isPatientsLoading || isPivcsLoading) return <PageLoadingState />
 
   const patient = patients.find((item) => item.id === assessment.patientId)
 

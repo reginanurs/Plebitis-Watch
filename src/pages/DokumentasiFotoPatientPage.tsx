@@ -140,22 +140,27 @@ function DokumentasiFotoPatientPage() {
     )
   }
 
-  function handleSave(values: PhotoFormValues) {
+  async function handleSave(values: PhotoFormValues) {
     if (!activePivc) return
-    addPhoto({
-      patientId: patient!.id,
-      pivcId: activePivc.id,
-      assessmentId: values.assessmentId,
-      imageData: values.imageData,
-      date: values.date,
-      time: values.time,
-      insertionSite: values.insertionSite,
-      vipScore: values.vipScore,
-      vipCategory: values.vipCategory,
-      note: values.note,
-      createdBy: values.createdBy,
-    })
-    setToastMessage('Foto area insersi berhasil disimpan.')
+    try {
+      await addPhoto({
+        patientId: patient!.id,
+        pivcId: activePivc.id,
+        assessmentId: values.assessmentId,
+        imageData: values.imageData,
+        date: values.date,
+        time: values.time,
+        insertionSite: values.insertionSite,
+        vipScore: values.vipScore,
+        vipCategory: values.vipCategory,
+        note: values.note,
+        createdBy: values.createdBy,
+      })
+      setToastMessage('Foto area insersi berhasil disimpan.')
+    } catch (error) {
+      console.error('Failed to save photo:', error)
+      setToastMessage('Gagal menyimpan foto, coba lagi.')
+    }
   }
 
   return (

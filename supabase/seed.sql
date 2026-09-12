@@ -1,9 +1,16 @@
--- Plebitis Watch — seed data for Phase 21 (patients & pivcs)
+-- Plebitis Watch — seed data for Phase 21 (patients & pivcs) and
+-- Phase 22 (assessments).
 --
--- Mirrors src/data/patients.json and src/data/pivc.json exactly, including
--- ids, so assessments/photos/reminders/notifications (still local JSON,
--- referencing these same ids) keep resolving correctly. Run after
--- schema.sql. Safe to re-run — existing rows are left untouched.
+-- Mirrors src/data/patients.json, src/data/pivc.json and
+-- src/data/assessments.json exactly, including ids, so
+-- photos/reminders/notifications (still local JSON, referencing these same
+-- ids) keep resolving correctly. Run after schema.sql. Safe to re-run —
+-- existing rows are left untouched.
+--
+-- NOTE: src/data/photos.json (5 placeholder demo photos) is deliberately
+-- NOT seeded here — those images require a real upload to Supabase Storage,
+-- which plain SQL can't do. The "Dokumentasi Foto" timeline for seed
+-- patients starts empty until new photos are captured through the app.
 
 insert into public.patients (id, medical_record_number, name, date_of_birth, gender, room, bed, address, notes)
 values
@@ -28,4 +35,28 @@ values
   ('pivc-seed-3', 'seed-8', '2026-09-04', '08:45', 'Vena mediana cubiti', 'Kanan', 'Peripheral IV Catheter 20G', 'Albumin 20%', 'Perawat', 'Terapi cairan rumatan', 'Pasien lansia, area insersi dipantau lebih ketat. Jenis terapi dicatat sebagai "Lainnya" karena tidak tersedia pada pilihan baku.', 'active'),
   ('pivc-seed-4', 'seed-2', '2026-09-05', '07:30', 'Vena cephalica', 'Kiri', 'Peripheral IV Catheter 20G', 'NaCl 0.9%', 'Perawat', 'Terapi cairan rumatan', '', 'active'),
   ('pivc-seed-5', 'seed-6', '2026-09-04', '16:00', 'Vena basilica', 'Kanan', 'Peripheral IV Catheter 22G', 'Dekstrosa 5%', 'Perawat', 'Terapi cairan dan elektrolit', '', 'active')
+on conflict (id) do nothing;
+
+insert into public.assessments (
+  id, patient_id, pivc_id, date, time, assessed_by, components, total_score, category, notes
+)
+values
+  ('assessment-seed-1', 'seed-1', 'pivc-seed-1', '2026-09-02', '15:00', 'Perawat',
+   '{"pain":"none","erythema":"absent","swelling":"absent","induration":"absent","venousCord":"absent","pyrexia":"absent"}'::jsonb,
+   0, 'Tidak ada tanda phlebitis', 'Kondisi awal area insersi baik, tidak ada tanda kemerahan atau nyeri.'),
+  ('assessment-seed-2', 'seed-1', 'pivc-seed-1', '2026-09-03', '09:30', 'Perawat',
+   '{"pain":"none","erythema":"present","swelling":"absent","induration":"absent","venousCord":"absent","pyrexia":"absent"}'::jsonb,
+   1, 'Kemungkinan tanda awal phlebitis', 'Sedikit kemerahan pada area insersi, dipantau lebih sering.'),
+  ('assessment-seed-3', 'seed-1', 'pivc-seed-1', '2026-09-04', '10:15', 'Perawat',
+   '{"pain":"slight_near_site","erythema":"present","swelling":"absent","induration":"absent","venousCord":"absent","pyrexia":"absent"}'::jsonb,
+   2, 'Stadium awal phlebitis', 'Nyeri ringan dan kemerahan tampak pada area insersi, dipantau lebih ketat.'),
+  ('assessment-seed-4', 'seed-8', 'pivc-seed-3', '2026-09-04', '09:00', 'Perawat',
+   '{"pain":"along_cannula","erythema":"present","swelling":"absent","induration":"present","venousCord":"absent","pyrexia":"absent"}'::jsonb,
+   3, 'Stadium sedang phlebitis', 'Nyeri di sepanjang jalur kanula disertai kemerahan dan indurasi (pengerasan jaringan) pada area insersi; pasien lansia dipantau lebih ketat sesuai SOP.'),
+  ('assessment-seed-5', 'seed-4', 'pivc-seed-2', '2026-08-21', '10:00', 'Perawat',
+   '{"pain":"along_cannula","erythema":"present","swelling":"absent","induration":"present","venousCord":"present","pyrexia":"absent"}'::jsonb,
+   4, 'Stadium lanjut phlebitis / awal thrombophlebitis', 'Ditemukan tanda phlebitis lanjut: nyeri di sepanjang kanula, kemerahan, indurasi (pengerasan jaringan), dan vena teraba seperti tali. PIVC dijadwalkan untuk dilepas dan diganti sesuai SOP.'),
+  ('assessment-seed-6', 'seed-6', 'pivc-seed-5', '2026-09-05', '18:00', 'Perawat',
+   '{"pain":"along_cannula","erythema":"present","swelling":"absent","induration":"present","venousCord":"present","pyrexia":"present"}'::jsonb,
+   5, 'Stadium lanjut thrombophlebitis', 'Seluruh tanda stadium lanjut ditemukan bersamaan, termasuk demam. Sesuai rekomendasi, kanula perlu segera dilepas dan pasien dirujuk untuk evaluasi medis lebih lanjut sesuai SOP fasilitas.')
 on conflict (id) do nothing;
